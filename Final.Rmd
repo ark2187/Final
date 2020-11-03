@@ -5,6 +5,7 @@ output: github_document
 
 
 This is the final document
+** This is a change we're trying to see!
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
