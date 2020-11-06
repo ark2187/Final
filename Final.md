@@ -1,39 +1,67 @@
-Proposal:
+P8105 Final Project – Proposal
 ================
 
-This is the proposal for the final project of: Amanda Nagle: acn2138
-Amanda Kramer: ark2187 Jessica Flynn: jf3200 Sydney Ng: sn2863 Shannon
-Park (Seonyoung Park): sp3804
+**Project Members**
 
-\*\* This is a change we’re trying to see\!
+  - Amanda Nagle: acn2138
+  - Amanda Kramer: ark2187
+  - Jessica Flynn: jf3200
+  - Sydney Ng: sn2863
+  - Shannon Seonyoung Park: sp3804
 
-## GitHub Documents
+**Tentative title:** Trends in US Border Crossings Over Time
 
-This is an R Markdown format used for publishing markdown documents to
-GitHub. When you click the **Knit** button all R code chunks are run and
-a markdown file (.md) suitable for publishing to GitHub is generated.
+**Motivation:** Immigration has been a hotly contested issue during
+Trump’s presidency. Marking his words of building a “big, beautiful
+wall” in 2016, President Donald Trump got the green light from The
+Supreme Court in 2019 and $2.5 billion from the Pentagon’s budget to
+building up the U.S.-Mexico border. Although the data we found on border
+crossings on Kaggle are recorded, legal, and do not run into 2020, we
+were interested in looking at border crossing trends because of this
+issue. This analysis will help us understand and show how the border
+crossings play into life (e.g. movement of goods, commuting, holiday
+travel).
 
-## Including Code
+**Data Source:**
+<https://www.kaggle.com/akhilv11/border-crossing-entry-data>
 
-You can include R code in the document as follows:
+**Intended final products:**
 
-``` r
-summary(cars)
-```
+  - An interactive leaflet heat map with location (latitude and
+    longitude) of crossings of the US-Canada and US-Mexico borders.
+  - Graphics displaying trends regarding vehicle types crossing, months
+    with heavy cross border traffic, and trends regarding holiday
+    travel.
+  - A screencast with some slides as well as interactive visualization
+    displays, as well as a website highlighting trends regarding border
+    crossing between the US, Canada and Mexico.
 
-    ##      speed           dist       
-    ##  Min.   : 4.0   Min.   :  2.00  
-    ##  1st Qu.:12.0   1st Qu.: 26.00  
-    ##  Median :15.0   Median : 36.00  
-    ##  Mean   :15.4   Mean   : 42.98  
-    ##  3rd Qu.:19.0   3rd Qu.: 56.00  
-    ##  Max.   :25.0   Max.   :120.00
+**Things we are interested in analyzing and visualizing:**
 
-## Including Plots
+  - What is the distribution of recorded crossings between the US-Canada
+    and US-Mexico borders?
+  - How busy are the busiest ports? Where are the busiest ports?
+  - Is there a time of the year when there are the most crossings? Are
+    there holiday trends?
+  - What types of vehicles are crossing the borders the most? For a few
+    ports (including Canadian ports)?
+  - Are there seasonal goods or commerce trends? (E.g., more private
+    care cross US-Canada in the summer and maybe more truck crossings
+    from Mexico in produce seasons.)
 
-You can also embed plots, for example:
+**Coding issues:** Some coding challenges we anticipating having are
+dealing with the latitudes and longitudes in the dataset and figuring
+out the interactive leaflet for the border crossings. It seems that we
+might have to separate the latitude and longitude coordinates because
+they are in one “location” column.
 
-![](Final_files/figure-gfm/pressure-1.png)<!-- -->
-
-Note that the `echo = FALSE` parameter was added to the code chunk to
-prevent printing of the R code that generated the plot.
+**Our timeline/plan:** We plan to perform exploratory data analysis the
+week following our Zoom project review meeting for firm up research
+questions we would like to explore, particularly from the questions we
+were initially interested in answering and any others that come up.
+Based on the questions we are interested, 2 weeks into the project we
+plan to do our analyses and create visualizations. In the week leading
+up to the December 5th due date, we will finalize our results and
+visualizations, write the report, and work on the screencast. We plan to
+meet at back together once a week and as needed, and to communicate
+pushes and pulls.
