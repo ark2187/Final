@@ -6,8 +6,45 @@ output: github_document
 
 #### Project Members
 
+<<<<<<< HEAD
 * Amanda Nagle:           acn2138
 * Amanda Kramer:          ark2187
 * Jessica Flynn:          jf3200
 * Sydney Ng:              sn2863
 * Shannon Seonyoung Park: sp3804
+=======
+This is the proposal for the final project of:
+Amanda Nagle:           acn2138
+Amanda Kramer:          ark2187
+Jessica Flynn:          jf3200
+Sydney Ng:              sn2863
+Shannon Park (Seonyoung Park): sp3804
+
+** This is a change we're trying to see!
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## GitHub Documents
+
+This is an R Markdown format used for publishing markdown documents to GitHub. When you click the **Knit** button all R code chunks are run and a markdown file (.md) suitable for publishing to GitHub is generated.
+
+## Including Code
+
+You can include R code in the document as follows:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+>>>>>>> b59e34977ffe856d85c1df5604a995fa7420d4c0
