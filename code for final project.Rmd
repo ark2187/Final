@@ -1,0 +1,22 @@
+---
+title: "Code for final project"
+author: "Amanda Nagle"
+date: "11/5/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+## Reading in a tidying the data
+
+Reading in the border crossing data:
+
+```{r }
+border_crossing_df = read_csv(file = "./Border_Crossing_Entry_Data.csv") %>% janitor::clean_names() %>% 
+  separate(date, into = c("date", "time", "am_pm"), sep = " ") %>%
+  mutate(date = as.Date(date))
+```
+
