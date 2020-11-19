@@ -1,0 +1,74 @@
+---
+title: "Border Crossings Interactive Dashboard"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(leaflet)
+```
+
+```{r tidied_data, message=FALSE}
+border_crossing_df = read_csv(file = "./Border_Crossing_Entry_Data.csv") %>% 
+  janitor::clean_names() %>% 
+  mutate(date = str_sub(date, end = -13), 
+         location = str_replace(location, "POINT ", ""), 
+         port_name_state = str_c(port_name, state, sep = "_")) %>% 
+  separate(date, into = c("month", "day", "year"), sep = "/", convert = TRUE) %>% 
+  select(-day, -port_name) %>% 
+  separate(location, into = c("long", "lat"), sep = " ") %>% 
+  mutate(long = str_replace(long, "\\(", ""), 
+         lat = str_replace(lat, "\\)", ""), 
+         long = as.numeric(long),
+         lat =  as.numeric(lat)) %>% 
+  filter(year >= 2000, year < 2019, value != 0)
+  
+```
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Chart A
+
+```{r}
+pal <- colorNumeric(
+  palette = "viridis",
+  domain = border_crossing_df$value)
+
+# renderLeaflet(( ... )) to put something in Shiny app when we figure this out
+border_crossing_df %>%
+  filter(border == "US-Canada Border") %>%
+  na.omit(value) %>%
+  mutate(
+    click_label = 
+      str_c("<b>$", border, "</b><br>", 
+            measure, "<br>", 
+            value, " number of crossings")) %>% 
+  leaflet() %>% 
+  addProviderTiles(providers$CartoDB.Positron) %>% 
+  addCircleMarkers(~long, ~lat, radius = .1, color = ~pal(value), popup = ~click_label)
+```
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Chart B
+
+```{r}
+border_crossing_df %>%
+  filter(border == "US-Mexico Border") %>%
+  na.omit(value) %>%
+  mutate(
+    click_label = 
+      str_c("<b>$", border, "</b><br>", 
+            measure, "<br>", 
+            value, " number of crossings")) %>% 
+  leaflet() %>% 
+  addProviderTiles(providers$CartoDB.Positron) %>% 
+  addCircleMarkers(~long, ~lat, radius = .1, color = ~pal(value), popup = ~click_label)
+```
+
