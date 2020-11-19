@@ -2,7 +2,7 @@
 title: "Code for final project"
 author: "Amanda Nagle"
 date: "11/5/2020"
-output: html_document
+output: github_document
 ---
 
 ```{r setup, include=FALSE}
@@ -131,6 +131,20 @@ border_crossing_df %>%
        y = "Number of Crossings")
 
 
+## For this one, we can have a drop down option for state. will show just for New York now
+border_crossing_df %>%
+  filter(state == "New York") %>% 
+  group_by(month, year) %>%  
+  summarize(mean_value = mean(value)) %>%
+  ggplot(aes(x = month , y = mean_value, color = as.factor(year))) + 
+  geom_point() + 
+  geom_line() + 
+  theme(legend.position = "bottom") + 
+  scale_x_continuous(limits = c(1,12), breaks = c(1:12)) +
+  labs(title = "Average Number of Border Crossings by Year in New York",
+       x = "Month", 
+       y = "Number of Crossings", 
+       color = "Year")
 
 
 ```
