@@ -30,11 +30,16 @@ border_crossing_df = read_csv(file = "./Border_Crossing_Entry_Data.csv") %>%
          long = as.numeric(long),
          lat =  as.numeric(lat)) %>% 
   filter(year >= 2000, year < 2019, value != 0)
+
+states_func <- function(choice, states_list){
+  if_else(choice %in% states_list, TRUE, FALSE)
+}
 ```
 
 Column {.sidebar}
 -----------------------------------------------------------------------
 ```{r}
+# Border, drop down menu
 border_choices <- border_crossing_df %>%
   pull(border) %>%
   unique()
@@ -46,6 +51,7 @@ selectInput(
   selected = "US-Canada" # default
 )
 
+# Year, drop down menu
 selectInput(
   inputId = "year_choice",
   label = h3("Year"),
@@ -53,15 +59,18 @@ selectInput(
   selected = "2018" # default
 )
 
-# port_choices <- border_crossing_df %>%
-#   pull(port_name_state) %>%
-#   unique()
-# 
-# radioButtons( # not sure if we wanted to use this, but made it as a template
-#   "port_choice",
-#   h3("Port Choice"),
-#   choices = port_choices
-# )
+# State, check multiple boxes
+state_choices <- border_crossing_df %>%
+  pull(state) %>%
+  unique() %>%
+  sort()
+
+checkboxGroupInput( # not sure if we wanted to use this, but made it as a template
+  "state_choice",
+  h3("State"),
+  choices = state_choices,
+  selected = state_choices
+)
 
 ```
 
@@ -73,24 +82,24 @@ Column {data-width=650}
 ### Chart A
 
 ```{r}
-renderPlotly(
+pal <- colorNumeric(
+  palette = "viridis",
+  domain = log(border_crossing_df$value))
+
+renderLeaflet(
   border_crossing_df %>%
-    mutate(text_label = str_c("Crossing type: ", 
-                              measure, "\nNumber: ", value)) %>%
-    filter(border == input[["border_choice"]],
+    mutate(state = map(state, states_func, input[["state_choice"]])) %>%
+    filter(state == TRUE,
+           border == input[["border_choice"]],
            year == input[["year_choice"]]) %>%
-    plot_ly(
-      x = ~long, y = ~lat, 
-      color = ~value, text = ~text_label,
-      alpha = 0.5, type = "scatter", mode = "markers"
-     )%>%
-    add_markers(x = ~long, y = ~jitter(lat), 
-                color = ~value,
-                marker = list(size=6),
-                hoverinfo = "text",
-                text = ~paste0("Crossing type: ",
-                              measure, "\nNumber: ", value),
-                showlegend=TRUE)
+    leaflet() %>% 
+    addProviderTiles(providers$CartoDB.Positron) %>%
+    addCircleMarkers(~jitter(long, factor = 10), 
+                     ~jitter(lat, factor = 10), radius = 5, 
+                     color = ~pal(log(value)), opacity = 0.25) %>%
+    addLegend("bottomright", pal = pal, values = ~log(value),
+              title = "LN Number of Crossings",
+              opacity = 0.25)
 )
 
 ```
@@ -101,18 +110,6 @@ Column {data-width=650}
 ### Chart B
 
 ```{r}
-pal <- colorNumeric(
-  palette = "viridis",
-  domain = border_crossing_df$value)
 
-renderLeaflet(
-  border_crossing_df %>%
-  filter(border == input[["border_choice"]],
-         year == input[["year_choice"]]) %>%
-  leaflet() %>%
-  addProviderTiles(providers$CartoDB.Positron) %>%
-  addCircleMarkers(~long, ~jitter(lat), radius = .1, 
-                   color = ~pal(value))
-)
 ```
 
