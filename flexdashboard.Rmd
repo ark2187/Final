@@ -4,11 +4,15 @@ output:
   flexdashboard::flex_dashboard:
     orientation: columns
     vertical_layout: fill
+    source: embed
+runtime: shiny
 ---
 
 ```{r setup, include=FALSE}
 library(flexdashboard)
 library(tidyverse)
+library(shiny)
+library(plotly)
 library(leaflet)
 ```
 
@@ -29,28 +33,43 @@ border_crossing_df = read_csv(file = "./Border_Crossing_Entry_Data.csv") %>%
   
 ```
 
+Column {.sidebar}
+-----------------------------------------------------------------------
+```{r}
+border_choices = border_crossing_df %>%
+  pull(border) %>%
+  unique()
+selectInput(
+  inputId = "border_choice",
+  label = h3("Border Choice"),
+  choices = border_choices
+)
+```
+
+
+
 Column {data-width=650}
 -----------------------------------------------------------------------
 
 ### Chart A
 
 ```{r}
-pal <- colorNumeric(
-  palette = "viridis",
-  domain = border_crossing_df$value)
-
-# renderLeaflet(( ... )) to put something in Shiny app when we figure this out
-border_crossing_df %>%
-  filter(border == "US-Canada Border") %>%
-  na.omit(value) %>%
-  mutate(
-    click_label = 
-      str_c("<b>$", border, "</b><br>", 
-            measure, "<br>", 
-            value, " number of crossings")) %>% 
-  leaflet() %>% 
-  addProviderTiles(providers$CartoDB.Positron) %>% 
-  addCircleMarkers(~long, ~lat, radius = .1, color = ~pal(value), popup = ~click_label)
+# pal <- colorNumeric(
+#   palette = "viridis",
+#   domain = border_crossing_df$value)
+# 
+# # renderLeaflet(( ... )) to put something in Shiny app when we figure this out
+# border_crossing_df %>%
+#   filter(border == "US-Canada Border") %>%
+#   na.omit(value) %>%
+#   mutate(
+#     click_label = 
+#       str_c("<b>$", border, "</b><br>", 
+#             measure, "<br>", 
+#             value, " number of crossings")) %>% 
+#   leaflet() %>% 
+#   addProviderTiles(providers$CartoDB.Positron) %>% 
+#   addCircleMarkers(~long, ~lat, radius = .1, color = ~pal(value), popup = ~click_label)
 ```
 
 Column {data-width=650}
@@ -59,16 +78,16 @@ Column {data-width=650}
 ### Chart B
 
 ```{r}
-border_crossing_df %>%
-  filter(border == "US-Mexico Border") %>%
-  na.omit(value) %>%
-  mutate(
-    click_label = 
-      str_c("<b>$", border, "</b><br>", 
-            measure, "<br>", 
-            value, " number of crossings")) %>% 
-  leaflet() %>% 
-  addProviderTiles(providers$CartoDB.Positron) %>% 
-  addCircleMarkers(~long, ~lat, radius = .1, color = ~pal(value), popup = ~click_label)
+# border_crossing_df %>%
+#   filter(border == "US-Mexico Border") %>%
+#   na.omit(value) %>%
+#   mutate(
+#     click_label = 
+#       str_c("<b>$", border, "</b><br>", 
+#             measure, "<br>", 
+#             value, " number of crossings")) %>% 
+#   leaflet() %>% 
+#   addProviderTiles(providers$CartoDB.Positron) %>% 
+#   addCircleMarkers(~long, ~lat, radius = .1, color = ~pal(value), popup = ~click_label)
 ```
 
