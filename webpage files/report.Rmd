@@ -10,6 +10,10 @@ output:
 
 ## Motivations
 
+Immigration has been a hotly contested issue during Trump’s presidency. Marking his words of building a “big, beautiful wall” in 2016, President Donald Trump got the green light from The Supreme Court in 2019 and $2.5 billion from the Pentagon’s budget to building up the U.S.-Mexico border.
+
+Although the data we found on border crossings on Kaggle are recorded, legal, and do not run into 2020, we were interested in looking at border crossing trends because of this issue. This analysis will help us understand and show how the border crossings play into life (e.g. movement of goods, commuting, holiday travel).
+
 ## Related Work
 
 ## Initial Questions
