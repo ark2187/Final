@@ -6,7 +6,7 @@ navbar:
     - text: "Report"
       href: report.html
     - text: "Shiny App"
-      href: dashboard.html
+      href: https://acn2138.shinyapps.io/dashboard/
 output:
   html_document:
     theme: lumen

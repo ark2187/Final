@@ -19,7 +19,7 @@ library(leaflet)
 ```{r tidied_data, message=FALSE}
 month_df <- tibble(month = 1:12, month_name = month.name)
 
-border_crossing_df = read_csv(file = "./Border_Crossing_Entry_Data.csv") %>% 
+border_crossing_df = read_csv(file = "../Border_Crossing_Entry_Data.csv") %>% 
   janitor::clean_names() %>% 
   mutate(date = str_sub(date, end = -13), 
          location = str_replace(location, "POINT ", ""), 
