@@ -1,0 +1,10 @@
+name: dashboard
+title:
+username:
+account: acn2138
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3284308
+bundleId: 3892344
+url: https://acn2138.shinyapps.io/dashboard/
+when: 1606084167.16678

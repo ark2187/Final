@@ -1,0 +1,12 @@
+name: "final proj"
+output_dir: "."
+navbar:
+  title: "About"
+  right:
+    - text: "Report"
+      href: report.html
+    - text: "Shiny App"
+      href: https://acn2138.shinyapps.io/dashboard/
+output:
+  html_document:
+    theme: lumen

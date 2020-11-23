@@ -1,0 +1,142 @@
+---
+title: "Border Crossings Interactive Dashboard"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+    source: embed
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(shiny)
+library(plotly)
+library(leaflet)
+```
+
+```{r tidied_data, message=FALSE}
+month_df <- tibble(month = 1:12, month_name = month.name)
+
+border_crossing_df = read_csv(file = "./Border_Crossing_Entry_Data.csv") %>% 
+  janitor::clean_names() %>% 
+  mutate(date = str_sub(date, end = -13), 
+         location = str_replace(location, "POINT ", ""), 
+         port_name_state = str_c(port_name, state, sep = "_")) %>% 
+  separate(date, into = c("month", "day", "year"), sep = "/", convert = TRUE) %>%
+  left_join(month_df, by = "month") %>%
+  select(-day, -month) %>% 
+  separate(location, into = c("long", "lat"), sep = " ") %>% 
+  mutate(long = str_replace(long, "\\(", ""), 
+         lat = str_replace(lat, "\\)", ""), 
+         long = as.numeric(long),
+         lat =  as.numeric(lat)) %>% 
+  filter(year >= 2000, year < 2019, value != 0)
+
+# function to filter states
+states_func <- function(choice, states_list){
+  if_else(choice %in% states_list, TRUE, FALSE)
+}
+
+# function to exponential and round number of border crossings
+round_exp <- function(val){
+  exp(val) %>% round()
+}
+
+# ------------ NOTES from Sydney ------------ #
+
+# I decided to use the actual names of months with a left-join and ports without the states attached, so I could use it for the markers on the leaflet.
+
+# First function "states_func" is to filter months for the check-boxes; not sure if this is the best way to filter months, and this can be changed.
+
+# Second function is for the legend. I applied a log-transformation of the crossings data because they are heavily right-skewed. A motivating example is household income ... run these next lines to check out the histogram:
+# hist(border_crossing_df$value)
+# hist(log(border_crossing_df$value))
+
+# ------------------------------------------- #
+```
+
+Column {.sidebar}
+-----------------------------------------------------------------------
+```{r sidebar_options}
+# Border, drop down menu
+border_choices <- border_crossing_df %>%
+  pull(border) %>%
+  unique()
+
+selectInput(
+  inputId = "border_choice",
+  label = h3("Border Choice"),
+  choices = border_choices,
+  selected = "US-Canada" # default
+)
+
+# Year, drop down menu
+selectInput(
+  inputId = "year_choice",
+  label = h3("Year"),
+  choices = c(2000:2018),
+  selected = "2018" # default
+)
+
+# State, check multiple boxes
+state_choices <- border_crossing_df %>%
+  pull(state) %>%
+  unique() %>%
+  sort()
+
+checkboxGroupInput(
+  "state_choice",
+  h3("State"),
+  choices = state_choices,
+  selected = state_choices # what should the default be??
+)
+
+```
+
+
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Chart A
+
+```{r crossings_leaflet}
+pal <- colorNumeric(
+  palette = "viridis",
+  domain = log(border_crossing_df$value))
+
+renderLeaflet(
+  border_crossing_df %>%
+    mutate(state_tf = map(state, states_func, input[["state_choice"]]),
+           label_txt = str_c(month_name, ", ", year,
+                             "<br>Port: ", port_name, ", ", state,
+                             "<br>Type: ", measure,
+                             "<br># of Crossings: ", value)) %>%
+    filter(state_tf == TRUE,
+           border == input[["border_choice"]],
+           year == input[["year_choice"]]) %>%
+    leaflet() %>% 
+    addProviderTiles(providers$CartoDB.Positron) %>%
+    addCircleMarkers(~jitter(long, factor = 10), 
+                     ~jitter(lat, factor = 10), radius = 5, 
+                     color = ~pal(log(value)), opacity = 0.25,
+                     popup = ~label_txt) %>%
+    addLegend("bottomright", pal = pal, values = ~log(value),
+              title = "# of Crossings", opacity = 0.5, 
+              labFormat = labelFormat(transform = round_exp)
+              )
+)
+
+```
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Chart B
+
+```{r}
+
+```
+
