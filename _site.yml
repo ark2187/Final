@@ -5,6 +5,16 @@ navbar:
   right:
     - text: "Report"
       href: report.html
+    - text: "Exploratory Analysis"
+      menu:
+        - text: "Crossings Monthly"
+          href: crossings_monthly.html
+        - text: "Crossings Annually"
+          href: crossings_annually.html
+        - text: "Crossings of People"
+          href: crossings_people.html
+        - text: "Crossings of Vehicles, Personal, Commercial"
+          href: crossings_vehicle.html
     - text: "Shiny App"
       href: acn2138.shinyapps.io/dashboard/
 output:
