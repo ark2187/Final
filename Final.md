@@ -7,7 +7,7 @@ P8105 Final Project – Proposal
   - Amanda Kramer: ark2187
   - Jessica Flynn: jf3200
   - Sydney Ng: sn2863
-  - Shannon Seonyoung Park: sp3804
+  - Shannon Park: sp3804
 
 **Tentative title:** Trends in US Border Crossings Over Time
 
@@ -40,6 +40,9 @@ travel).
 
   - What is the distribution of recorded crossings between the US-Canada
     and US-Mexico borders?
+  - Is there a time-trend of recorded crossings when comparing each
+    year’s record? Or Is there a noticeable change in total number of
+    recorded crossings?
   - How busy are the busiest ports? Where are the busiest ports?
   - Is there a time of the year when there are the most crossings? Are
     there holiday trends?
