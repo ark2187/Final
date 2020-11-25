@@ -391,8 +391,53 @@ div.tocify {
 </div>
 
 
-<div id="personal-vehicle-trends" class="section level1">
-<h1>Personal Vehicle Trends</h1>
+<div id="vehicle-trends" class="section level1">
+<h1>Vehicle Trends</h1>
+<pre class="r"><code>vehicles_monthly &lt;-
+  vehicles_df %&gt;%
+  filter(vehicle == &quot;Vehicles&quot;) %&gt;%
+  group_by(measure, month) %&gt;%
+  summarize(num = sum(value))
+
+vehicles_monthly %&gt;%
+  group_by(measure) %&gt;%
+  ggplot(aes(x = month, y = log(num)), color = as.factor(measure)) +
+  geom_point() +
+  geom_line() +
+  theme(legend.position = &quot;bottom&quot;) + 
+  scale_x_continuous(limits = c(1,12), breaks = c(1:12)) +
+  scale_y_continuous(trans = scales::log_trans(base = exp(1))) +
+  labs(title = &quot;Monthly Trends of Vehicle Border Crossings from 2000 to 2018&quot;,
+       x = &quot;Month&quot;, 
+       y = &quot;Ln Number of Crossings&quot;, 
+       color = &quot;Vehicle Type&quot;)</code></pre>
+<p><img src="crossings_vehicles_files/figure-html/unnamed-chunk-3-1.png" width="90%" /></p>
+<p>Help why does this look like this :(</p>
+<pre class="r"><code>vehicles_yearly &lt;-
+  vehicles_df %&gt;%
+  group_by(vehicle, year) %&gt;%
+  summarize(num = sum(value))
+
+vehicles_yearly %&gt;%
+  ggplot(aes(x = year, y = log(num), color = as.factor(vehicle))) +
+  geom_point(size = 2, alpha = 0.5) +
+  geom_line(size = 1.5, alpha = 0.5) +
+  theme(legend.position = &quot;bottom&quot;) + 
+  scale_x_continuous(limits = c(2000,2018), breaks = c(2000:2018)) +
+  scale_y_continuous(trans = scales::log_trans(base = exp(1))) +
+  labs(title = &quot;Yearly Trend of Vehicle and Non-Vehicle Border Crossings from 2000 to 2018&quot;,
+       x = &quot;Year&quot;, 
+       y = &quot;Ln Number of Crossings&quot;, 
+       color = &quot;Crossing Type&quot;,
+       caption = &quot;Number of crossings was log-transformed. Non-vehicle types include pedestrian and vehicle passenger counts.&quot;)+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))</code></pre>
+<p><img src="crossings_vehicles_files/figure-html/unnamed-chunk-4-1.png" width="90%" /></p>
+<p>Add comments about the trends!! They look pretty similar for both vehicle and non-vehicles. Do we need to be concerned with the fact that X and X - passengers are correlated because we are counting the number of passengers in each vehicle?</p>
+</div>
+<div id="personal-vehicles" class="section level1">
+<h1>Personal Vehicles</h1>
+<pre class="r"><code>personal_vehicle_df &lt;-
+  vehicles_df</code></pre>
 <p>change in commercial travel</p>
 <p>empty trucks?</p>
 </div>

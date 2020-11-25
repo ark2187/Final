@@ -8,17 +8,37 @@ output:
 
 ```{r include=FALSE}
 library(tidyverse)
+
+knitr::opts_chunk$set(
+  fig.width = 10,
+  fig.asp = .6,
+  fig.height = 8,
+  out.width = "90%"
+)
+
+theme_set(theme_minimal() + theme(legend.position = "right"))
+
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+
+scale_colour_discrete = scale_color_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
 ```
 
 
 ```{r include=FALSE}
-border_crossing_df = read_csv(file = "./Border_Crossing_Entry_Data.csv") %>% 
+month_df <- tibble(month = 1:12, month_name = month.name)
+
+border_crossing_df <- read_csv(file = "./Border_Crossing_Entry_Data.csv") %>% 
   janitor::clean_names() %>% 
   mutate(date = str_sub(date, end = -13), 
          location = str_replace(location, "POINT ", ""), 
          port_name_state = str_c(port_name, state, sep = "_")) %>% 
-  separate(date, into = c("month", "day", "year"), sep = "/", convert = TRUE) %>% 
-  select(-day, -port_name) %>% 
+  separate(date, into = c("month", "day", "year"), sep = "/", convert = TRUE) %>%
+  left_join(month_df, by = "month") %>%
+  select(-day) %>% 
   separate(location, into = c("long", "lat"), sep = " ") %>% 
   mutate(long = str_replace(long, "\\(", ""), 
          lat = str_replace(lat, "\\)", ""), 
@@ -26,16 +46,71 @@ border_crossing_df = read_csv(file = "./Border_Crossing_Entry_Data.csv") %>%
          lat =  as.numeric(lat)) %>% 
   filter(year >= 2000, year < 2019, value != 0)
 
-vehicles_df <-
+vehicles_df <- # get rid of passengers and pedestrians
   border_crossing_df %>%
   mutate(vehicle = if_else(str_detect(measure, "Passengers") |
-                             measure == "Pedestrians",0,1)) %>%
-  filter(vehicle == 1) %>%
-  select(-vehicle)
+                             measure == "Pedestrians",
+                           "Non-Vehicles", "Vehicles"))
+
+round_exp <- function(val){
+  exp(val) %>% round()
+}
   
 ```
 
-# Personal Vehicle Trends
+# Vehicle Trends
+```{r message = FALSE}
+vehicles_monthly <-
+  vehicles_df %>%
+  filter(vehicle == "Vehicles") %>%
+  group_by(measure, month) %>%
+  summarize(num = sum(value))
+
+vehicles_monthly %>%
+  group_by(measure) %>%
+  ggplot(aes(x = month, y = log(num)), color = as.factor(measure)) +
+  geom_point() +
+  geom_line() +
+  theme(legend.position = "bottom") + 
+  scale_x_continuous(limits = c(1,12), breaks = c(1:12)) +
+  scale_y_continuous(trans = scales::log_trans(base = exp(1))) +
+  labs(title = "Monthly Trends of Vehicle Border Crossings from 2000 to 2018",
+       x = "Month", 
+       y = "Ln Number of Crossings", 
+       color = "Vehicle Type")
+```
+
+Help why does this look like this :(
+
+```{r message = FALSE}
+vehicles_yearly <-
+  vehicles_df %>%
+  group_by(vehicle, year) %>%
+  summarize(num = sum(value))
+
+vehicles_yearly %>%
+  ggplot(aes(x = year, y = log(num), color = as.factor(vehicle))) +
+  geom_point(size = 2, alpha = 0.5) +
+  geom_line(size = 1.5, alpha = 0.5) +
+  theme(legend.position = "bottom") + 
+  scale_x_continuous(limits = c(2000,2018), breaks = c(2000:2018)) +
+  scale_y_continuous(trans = scales::log_trans(base = exp(1))) +
+  labs(title = "Yearly Trend of Vehicle and Non-Vehicle Border Crossings from 2000 to 2018",
+       x = "Year", 
+       y = "Ln Number of Crossings", 
+       color = "Crossing Type",
+       caption = "Number of crossings was log-transformed. Non-vehicle types include pedestrian and vehicle passenger counts.")+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+Add comments about the trends!! They look pretty similar for both vehicle and non-vehicles. Do we need to be concerned with the fact that X and X - passengers are correlated because we are counting the number of passengers in each vehicle?
+
+# Personal Vehicles
+
+```{r eval=FALSE}
+personal_vehicle_df <-
+  vehicles_df
+```
 
 change in commercial travel
 
