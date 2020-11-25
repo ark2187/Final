@@ -14,7 +14,7 @@ navbar:
         - text: "Crossings of People"
           href: crossings_people.html
         - text: "Crossings of Vehicles, Personal, Commercial"
-          href: crossings_vehicle.html
+          href: crossings_vehicles.html
     - text: "Shiny App"
       href: https://acn2138.shinyapps.io/dashboard/?_ga=2.142141554.1361502426.1606339972-1725755859.1605631383
 output:
