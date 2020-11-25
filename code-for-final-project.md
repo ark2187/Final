@@ -1,6 +1,5 @@
 Code for final project
 ================
-Amanda Nagle
 11/5/2020
 
 ## Reading in a tidying the data
