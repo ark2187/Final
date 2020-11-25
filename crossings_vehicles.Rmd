@@ -6,9 +6,36 @@ output:
     toc_float: true
 ---
 
-# Graphs about Vehicles
+```{r include=FALSE}
+library(tidyverse)
+```
 
-commercial v personal vehicle
+
+```{r include=FALSE}
+border_crossing_df = read_csv(file = "./Border_Crossing_Entry_Data.csv") %>% 
+  janitor::clean_names() %>% 
+  mutate(date = str_sub(date, end = -13), 
+         location = str_replace(location, "POINT ", ""), 
+         port_name_state = str_c(port_name, state, sep = "_")) %>% 
+  separate(date, into = c("month", "day", "year"), sep = "/", convert = TRUE) %>% 
+  select(-day, -port_name) %>% 
+  separate(location, into = c("long", "lat"), sep = " ") %>% 
+  mutate(long = str_replace(long, "\\(", ""), 
+         lat = str_replace(lat, "\\)", ""), 
+         long = as.numeric(long),
+         lat =  as.numeric(lat)) %>% 
+  filter(year >= 2000, year < 2019, value != 0)
+
+vehicles_df <-
+  border_crossing_df %>%
+  mutate(vehicle = if_else(str_detect(measure, "Passengers") |
+                             measure == "Pedestrians",0,1)) %>%
+  filter(vehicle == 1) %>%
+  select(-vehicle)
+  
+```
+
+# Personal Vehicle Trends
 
 change in commercial travel
 
