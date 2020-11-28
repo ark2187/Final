@@ -8,6 +8,7 @@ output:
 
 ```{r include=FALSE}
 library(tidyverse)
+library(patchwork)
 
 knitr::opts_chunk$set(
   fig.width = 10,
@@ -103,7 +104,46 @@ vehicles_yearly %>%
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-Add comments about the trends!! They look pretty similar for both vehicle and non-vehicles. Do we need to be concerned with the fact that X and X - passengers are correlated because we are counting the number of passengers in each vehicle?
+The border-crossing trends look similar for both vehicle and non-vehicles, which include pedestrian crossings and passengers. We see a substantial dip in the data around 2008-2012 when President Obama serves his first term. This was a time known for a rise in deportations and lack of immigration reform due to Republican opposition. In his second term, Obama was able to accomplish more broader legislation including the Deferred Action for Childhood Arrivals (DACA) in 2012.
+
+```{r message=FALSE}
+mexico_yearly <- 
+  vehicles_df %>%
+  filter(border == "US-Mexico Border") %>%
+  group_by(vehicle, year) %>%
+  summarize(num = sum(value)) %>%
+  ggplot(aes(x = year, y = log(num), color = as.factor(vehicle))) +
+  geom_point(size = 2, alpha = 0.5) +
+  geom_line(size = 1.5, alpha = 0.5) +
+  theme(legend.position = "bottom") + 
+  scale_x_continuous(limits = c(2000,2018), breaks = c(2000:2018)) +
+  scale_y_continuous(trans = scales::log_trans(base = exp(1))) +
+  labs(title = "Yearly Trend of Vehicle and Non-Vehicle US-Mexico Border Crossings from 2000 to 2018",
+       x = "Year", 
+       y = "Ln Number of Crossings",
+       color = "Crossing Type",
+       caption = "Number of crossings was log-transformed. Non-vehicle types include pedestrian and vehicle passenger counts.")+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+canada_yearly <- 
+  vehicles_df %>%
+  filter(border == "US-Canada Border") %>%
+  group_by(vehicle, year) %>%
+  summarize(num = sum(value)) %>%
+  ggplot(aes(x = year, y = log(num), color = as.factor(vehicle))) +
+  geom_point(size = 2, alpha = 0.5) +
+  geom_line(size = 1.5, alpha = 0.5) +
+  theme(legend.position = "none") +
+  scale_x_continuous(limits = c(2000,2018), breaks = c(2000:2018)) +
+  scale_y_continuous(trans = scales::log_trans(base = exp(1))) +
+  labs(title = "Yearly Trend of Vehicle and Non-Vehicle US-Canada Border Crossings from 2000 to 2018",
+       x = "Year", 
+       y = "Ln Number of Crossings") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+canada_yearly / mexico_yearly
+```
+
 
 # Personal Vehicles
 

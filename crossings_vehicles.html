@@ -367,7 +367,7 @@ div.tocify {
       <a href="crossings_people.html">Crossings of People</a>
     </li>
     <li>
-      <a href="crossings_vehicle.html">Crossings of Vehicles, Personal, Commercial</a>
+      <a href="crossings_vehicles.html">Crossings of Vehicles, Personal, Commercial</a>
     </li>
   </ul>
 </li>
@@ -432,7 +432,43 @@ vehicles_yearly %&gt;%
        caption = &quot;Number of crossings was log-transformed. Non-vehicle types include pedestrian and vehicle passenger counts.&quot;)+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))</code></pre>
 <p><img src="crossings_vehicles_files/figure-html/unnamed-chunk-4-1.png" width="90%" /></p>
-<p>Add comments about the trends!! They look pretty similar for both vehicle and non-vehicles. Do we need to be concerned with the fact that X and X - passengers are correlated because we are counting the number of passengers in each vehicle?</p>
+<p>The border-crossing trends look similar for both vehicle and non-vehicles, which include pedestrian crossings and passengers. We see a substantial dip in the data around 2008-2012 when President Obama serves his first term. This was a time known for a rise in deportations and lack of immigration reform due to Republican opposition. In his second term, Obama was able to accomplish more broader legislation including the Deferred Action for Childhood Arrivals (DACA) in 2012.</p>
+<pre class="r"><code>mexico_yearly &lt;- 
+  vehicles_df %&gt;%
+  filter(border == &quot;US-Mexico Border&quot;) %&gt;%
+  group_by(vehicle, year) %&gt;%
+  summarize(num = sum(value)) %&gt;%
+  ggplot(aes(x = year, y = log(num), color = as.factor(vehicle))) +
+  geom_point(size = 2, alpha = 0.5) +
+  geom_line(size = 1.5, alpha = 0.5) +
+  theme(legend.position = &quot;bottom&quot;) + 
+  scale_x_continuous(limits = c(2000,2018), breaks = c(2000:2018)) +
+  scale_y_continuous(trans = scales::log_trans(base = exp(1))) +
+  labs(title = &quot;Yearly Trend of Vehicle and Non-Vehicle US-Mexico Border Crossings from 2000 to 2018&quot;,
+       x = &quot;Year&quot;, 
+       y = &quot;Ln Number of Crossings&quot;,
+       color = &quot;Crossing Type&quot;,
+       caption = &quot;Number of crossings was log-transformed. Non-vehicle types include pedestrian and vehicle passenger counts.&quot;)+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+canada_yearly &lt;- 
+  vehicles_df %&gt;%
+  filter(border == &quot;US-Canada Border&quot;) %&gt;%
+  group_by(vehicle, year) %&gt;%
+  summarize(num = sum(value)) %&gt;%
+  ggplot(aes(x = year, y = log(num), color = as.factor(vehicle))) +
+  geom_point(size = 2, alpha = 0.5) +
+  geom_line(size = 1.5, alpha = 0.5) +
+  theme(legend.position = &quot;none&quot;) +
+  scale_x_continuous(limits = c(2000,2018), breaks = c(2000:2018)) +
+  scale_y_continuous(trans = scales::log_trans(base = exp(1))) +
+  labs(title = &quot;Yearly Trend of Vehicle and Non-Vehicle US-Canada Border Crossings from 2000 to 2018&quot;,
+       x = &quot;Year&quot;, 
+       y = &quot;Ln Number of Crossings&quot;) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+canada_yearly / mexico_yearly</code></pre>
+<p><img src="crossings_vehicles_files/figure-html/unnamed-chunk-5-1.png" width="90%" /></p>
 </div>
 <div id="personal-vehicles" class="section level1">
 <h1>Personal Vehicles</h1>
