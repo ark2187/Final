@@ -64,14 +64,16 @@ round_exp <- function(val){
 vehicles_monthly <-
   vehicles_df %>%
   filter(vehicle == "Vehicles") %>%
-  group_by(measure, month) %>%
+  group_by(border, measure, month) %>%
   summarize(num = sum(value))
 
 vehicles_monthly %>%
-  group_by(measure) %>%
-  ggplot(aes(x = month, y = log(num)), color = as.factor(measure)) +
+  mutate(measure = as.factor(measure), border = as.factor(border)) %>%
+  ungroup() %>%
+  ggplot(aes(x = month, y = log(num), group = measure , color = measure)) +
   geom_point() +
   geom_line() +
+  facet_grid(~border) +
   theme(legend.position = "bottom") + 
   scale_x_continuous(limits = c(1,12), breaks = c(1:12)) +
   scale_y_continuous(trans = scales::log_trans(base = exp(1))) +
@@ -81,7 +83,7 @@ vehicles_monthly %>%
        color = "Vehicle Type")
 ```
 
-Help why does this look like this :(
+More buses at US Mexico border- seasonal trends in US Canadian border buses and personal vehicles. 
 
 ```{r message = FALSE}
 vehicles_yearly <-

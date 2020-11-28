@@ -396,14 +396,16 @@ div.tocify {
 <pre class="r"><code>vehicles_monthly &lt;-
   vehicles_df %&gt;%
   filter(vehicle == &quot;Vehicles&quot;) %&gt;%
-  group_by(measure, month) %&gt;%
+  group_by(border, measure, month) %&gt;%
   summarize(num = sum(value))
 
 vehicles_monthly %&gt;%
-  group_by(measure) %&gt;%
-  ggplot(aes(x = month, y = log(num)), color = as.factor(measure)) +
+  mutate(measure = as.factor(measure), border = as.factor(border)) %&gt;%
+  ungroup() %&gt;%
+  ggplot(aes(x = month, y = log(num), group = measure , color = measure)) +
   geom_point() +
   geom_line() +
+  facet_grid(~border) +
   theme(legend.position = &quot;bottom&quot;) + 
   scale_x_continuous(limits = c(1,12), breaks = c(1:12)) +
   scale_y_continuous(trans = scales::log_trans(base = exp(1))) +
@@ -412,7 +414,7 @@ vehicles_monthly %&gt;%
        y = &quot;Ln Number of Crossings&quot;, 
        color = &quot;Vehicle Type&quot;)</code></pre>
 <p><img src="crossings_vehicles_files/figure-html/unnamed-chunk-3-1.png" width="90%" /></p>
-<p>Help why does this look like this :(</p>
+<p>More buses at US Mexico border- seasonal trends in US Canadian border buses and personal vehicles.</p>
 <pre class="r"><code>vehicles_yearly &lt;-
   vehicles_df %&gt;%
   group_by(vehicle, year) %&gt;%
