@@ -35,26 +35,14 @@ border_crossing_df = read_csv(file = "../Border_Crossing_Entry_Data.csv") %>%
   filter(year >= 2000, year < 2019, value != 0)
 
 # function to filter states
-states_func <- function(choice, states_list){
-  if_else(choice %in% states_list, TRUE, FALSE)
+crossings_type_func <- function(choice, measure){
+  if_else(choice %in% measure, TRUE, FALSE)
 }
 
 # function to exponential and round number of border crossings
 round_exp <- function(val){
   exp(val) %>% round()
 }
-
-# ------------ NOTES from Sydney ------------ #
-
-# I decided to use the actual names of months with a left-join and ports without the states attached, so I could use it for the markers on the leaflet.
-
-# First function "states_func" is to filter months for the check-boxes; not sure if this is the best way to filter months, and this can be changed.
-
-# Second function is for the legend. I applied a log-transformation of the crossings data because they are heavily right-skewed. A motivating example is household income ... run these next lines to check out the histogram:
-# hist(border_crossing_df$value)
-# hist(log(border_crossing_df$value))
-
-# ------------------------------------------- #
 ```
 
 Column {.sidebar}
@@ -80,17 +68,17 @@ selectInput(
   selected = "2018" # default
 )
 
-# State, check multiple boxes
-state_choices <- border_crossing_df %>%
-  pull(state) %>%
+# Crossing types
+crossing_choices <- border_crossing_df %>%
+  pull(measure) %>%
   unique() %>%
   sort()
 
 checkboxGroupInput(
-  "state_choice",
-  h3("State"),
-  choices = state_choices,
-  selected = state_choices # what should the default be??
+  "crossings_choice",
+  h3("Type of Crossing"),
+  choices = crossing_choices,
+  selected = crossing_choices # what should the default be??
 )
 
 ```
@@ -100,7 +88,7 @@ checkboxGroupInput(
 Column {data-width=650}
 -----------------------------------------------------------------------
 
-### Chart A
+### Leaflet for Border Crossings
 
 ```{r crossings_leaflet}
 pal <- colorNumeric(
@@ -109,12 +97,13 @@ pal <- colorNumeric(
 
 renderLeaflet(
   border_crossing_df %>%
-    mutate(state_tf = map(state, states_func, input[["state_choice"]]),
+    mutate(type_tf = map(measure, crossings_type_func,
+                          input[["crossings_choice"]]),
            label_txt = str_c(month_name, ", ", year,
                              "<br>Port: ", port_name, ", ", state,
                              "<br>Type: ", measure,
                              "<br># of Crossings: ", value)) %>%
-    filter(state_tf == TRUE,
+    filter(type_tf == TRUE,
            border == input[["border_choice"]],
            year == input[["year_choice"]]) %>%
     leaflet() %>% 
@@ -131,10 +120,16 @@ renderLeaflet(
 
 ```
 
-Column {data-width=650}
+Column {data-width=300}
 -----------------------------------------------------------------------
 
 ### Chart B
+
+```{r}
+
+```
+
+### Chart C
 
 ```{r}
 
