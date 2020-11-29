@@ -160,6 +160,42 @@ personal_vehicle_df <-
   border_crossing_df
 ```
 
+# Texas
+```{r}
+tx_ca_monthly <-
+  border_crossing_df %>%
+  filter(state %in% c("California", "Texas")) %>%
+  mutate(
+    measure_short= case_when(
+      measure == "Personal Vehicle Passengers" ~ "Personal Vehicles",
+      measure == "Personal Vehicles" ~ "Personal Vehicles",
+      measure == "Rail Containers Empty" ~ "Rail Containers",
+      measure == "Rail Containers Full" ~ "Rail Containers",
+      measure == "Bus Passengers" ~ "Buses",
+      measure == "Buses" ~ "Buses",
+      measure == "Truck Containers Empty" ~ "Trucks",
+      measure == "Truck Containers Full" ~ "Trucks",
+      measure == "Trucks" ~ "Trucks",
+      measure == "Train Passengers" ~ "Trains",
+      measure == "Trains" ~ "Trains",
+      measure == "Pedestrians" ~ "Pedestrians",
+    ),
+    measure = as.factor(measure_short),
+    state = as.factor(state)) %>%
+  group_by(state, measure_short, month) %>%
+  summarize(num = sum(value))
 
-
+tx_ca_monthly %>%
+  ungroup() %>%
+  ggplot(aes(x = month, y = log(num), color = measure_short)) +
+  geom_point(alpha = 0.5, position = position_jitter(w = 0.2, h = 0)) +
+  facet_grid(~state) +
+  theme(legend.position = "bottom") + 
+  scale_x_continuous(limits = c(1,12), breaks = c(1:12)) +
+  scale_y_continuous(trans = scales::log_trans(base = exp(1))) +
+  labs(title = "Monthly Trends of Vehicle Border Crossings from 2000 to 2018 by Vehicle Types",
+       x = "Month", 
+       y = "Ln Number of Crossings", 
+       color = "Vehicle Type")
+```
  

@@ -511,6 +511,46 @@ canada_yearly / mexico_yearly</code></pre>
 <pre class="r"><code>personal_vehicle_df &lt;-
   border_crossing_df</code></pre>
 </div>
+<div id="texas" class="section level1">
+<h1>Texas</h1>
+<pre class="r"><code>tx_ca_monthly &lt;-
+  border_crossing_df %&gt;%
+  filter(state %in% c(&quot;California&quot;, &quot;Texas&quot;)) %&gt;%
+  mutate(
+    measure_short= case_when(
+      measure == &quot;Personal Vehicle Passengers&quot; ~ &quot;Personal Vehicles&quot;,
+      measure == &quot;Personal Vehicles&quot; ~ &quot;Personal Vehicles&quot;,
+      measure == &quot;Rail Containers Empty&quot; ~ &quot;Rail Containers&quot;,
+      measure == &quot;Rail Containers Full&quot; ~ &quot;Rail Containers&quot;,
+      measure == &quot;Bus Passengers&quot; ~ &quot;Buses&quot;,
+      measure == &quot;Buses&quot; ~ &quot;Buses&quot;,
+      measure == &quot;Truck Containers Empty&quot; ~ &quot;Trucks&quot;,
+      measure == &quot;Truck Containers Full&quot; ~ &quot;Trucks&quot;,
+      measure == &quot;Trucks&quot; ~ &quot;Trucks&quot;,
+      measure == &quot;Train Passengers&quot; ~ &quot;Trains&quot;,
+      measure == &quot;Trains&quot; ~ &quot;Trains&quot;,
+      measure == &quot;Pedestrians&quot; ~ &quot;Pedestrians&quot;,
+    ),
+    measure = as.factor(measure_short),
+    state = as.factor(state)) %&gt;%
+  group_by(state, measure_short, month) %&gt;%
+  summarize(num = sum(value))</code></pre>
+<pre><code>## `summarise()` regrouping output by &#39;state&#39;, &#39;measure_short&#39; (override with `.groups` argument)</code></pre>
+<pre class="r"><code>tx_ca_monthly %&gt;%
+  ungroup() %&gt;%
+  ggplot(aes(x = month, y = log(num), color = measure_short)) +
+  geom_point(alpha = 0.5, position = position_jitter(w = 0.2, h = 0)) +
+  facet_grid(~state) +
+  theme(legend.position = &quot;bottom&quot;) + 
+  scale_x_continuous(limits = c(1,12), breaks = c(1:12)) +
+  scale_y_continuous(trans = scales::log_trans(base = exp(1))) +
+  labs(title = &quot;Monthly Trends of Vehicle Border Crossings from 2000 to 2018 by Vehicle Types&quot;,
+       x = &quot;Month&quot;, 
+       y = &quot;Ln Number of Crossings&quot;, 
+       color = &quot;Vehicle Type&quot;)</code></pre>
+<pre><code>## Warning: Removed 12 rows containing missing values (geom_point).</code></pre>
+<p><img src="crossings_vehicles_files/figure-html/unnamed-chunk-8-1.png" width="90%" /></p>
+</div>
 
 
 
