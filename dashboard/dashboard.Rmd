@@ -19,7 +19,7 @@ library(leaflet)
 ```{r tidied_data, message=FALSE}
 month_df <- tibble(month = 1:12, month_name = month.name)
 
-border_crossing_df = read_csv(file = "../Border_Crossing_Entry_Data.csv") %>% 
+border_crossing_df <- read_csv(file = "../Border_Crossing_Entry_Data.csv") %>% 
   janitor::clean_names() %>% 
   mutate(date = str_sub(date, end = -13), 
          location = str_replace(location, "POINT ", ""), 
@@ -78,14 +78,14 @@ checkboxGroupInput(
   "crossings_choice",
   h3("Type of Crossing"),
   choices = crossing_choices,
-  selected = crossing_choices # what should the default be??
+  selected = crossing_choices # default is all crossing types
 )
 
 ```
 
 
 
-Column {data-width=650}
+Column {data-width=500}
 -----------------------------------------------------------------------
 
 ### Leaflet for Border Crossings
@@ -120,16 +120,24 @@ renderLeaflet(
 
 ```
 
-Column {data-width=300}
+Column {data-width=450}
 -----------------------------------------------------------------------
 
-### Chart B
+### Boxplot for Selected Crossings for Corresponding Border States
 
 ```{r}
-
+renderPlotly({
+    border_crossing_df %>%
+    group_by(state, border, year, measure) %>%
+    summarize(num = sum(value)) %>%
+    filter(border == input[["border_choice"]],
+           year == input[["year_choice"]]) %>%
+    plot_ly(x = ~state, y = ~log(num), color = ~state, 
+            type = "box", colors = "viridis", alpha = 0.5)
+})
 ```
 
-### Chart C
+### Monthly Trends for States for Selected Crossing Types
 
 ```{r}
 

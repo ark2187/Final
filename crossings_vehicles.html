@@ -11,7 +11,7 @@
 
 
 
-<title>Crossings Vehicles</title>
+<title>Vehicle and Non-Vehicle Border Crossing Trends</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -23,6 +23,7 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 
@@ -248,6 +249,9 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
 
 
 
@@ -384,15 +388,23 @@ div.tocify {
 
 <div class="fluid-row" id="header">
 
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
 
 
-<h1 class="title toc-ignore">Crossings Vehicles</h1>
+
+<h1 class="title toc-ignore">Vehicle and Non-Vehicle Border Crossing Trends</h1>
 
 </div>
 
 
-<div id="vehicle-trends" class="section level1">
-<h1>Vehicle Trends</h1>
+<div id="monthly-trends" class="section level3">
+<h3>Monthly Trends</h3>
 <pre class="r"><code>vehicles_monthly &lt;-
   border_crossing_df %&gt;%
   filter(vehicle == &quot;Vehicles&quot;) %&gt;%
@@ -403,18 +415,22 @@ vehicles_monthly %&gt;%
   mutate(measure = as.factor(measure), border = as.factor(border)) %&gt;%
   ungroup() %&gt;%
   ggplot(aes(x = month, y = log(num), group = measure , color = measure)) +
-  geom_point() +
-  geom_line() +
+  geom_point(size = 2, alpha = 0.5) +
+  geom_line(size = 1.5, alpha = 0.5) +
   facet_grid(~border) +
   theme(legend.position = &quot;bottom&quot;) + 
   scale_x_continuous(limits = c(1,12), breaks = c(1:12)) +
   scale_y_continuous(trans = scales::log_trans(base = exp(1))) +
-  labs(title = &quot;Monthly Trends of Vehicle Border Crossings from 2000 to 2018&quot;,
+  labs(title = &quot;Monthly Trends of Vehicle Border Crossings from 2000 to 2018 by Vehicle Types&quot;,
        x = &quot;Month&quot;, 
        y = &quot;Ln Number of Crossings&quot;, 
        color = &quot;Vehicle Type&quot;)</code></pre>
 <p><img src="crossings_vehicles_files/figure-html/unnamed-chunk-3-1.png" width="90%" /></p>
-<p>More buses at US Mexico border- seasonal trends in US Canadian border buses and personal vehicles.</p>
+<p>There are more buses and personal vehicle crossings on average at US-Mexico border, but there are more train crossings at the US-Canada border. Looking further at the monthly trends, there is some seasonality in US-Canada border crossings for buses and personal vehicles during the summer months.</p>
+<p>The US-Mexico border has about the same number of crossings throughout the months for both empty and full rail containers, whereas the US-Canada border has consistently greater full rail container crossings.</p>
+</div>
+<div id="yearly-trends" class="section level3">
+<h3>Yearly trends</h3>
 <pre class="r"><code>vehicles_yearly &lt;-
   border_crossing_df %&gt;%
   group_by(vehicle, year) %&gt;%
@@ -435,6 +451,24 @@ vehicles_yearly %&gt;%
   theme(axis.text.x = element_text(angle = 45, hjust = 1))</code></pre>
 <p><img src="crossings_vehicles_files/figure-html/unnamed-chunk-4-1.png" width="90%" /></p>
 <p>The border-crossing trends look similar for both vehicle and non-vehicles, which include pedestrian crossings and passengers. We see a substantial dip in the data around 2008-2012 when President Obama serves his first term. This was a time known for a rise in deportations and lack of immigration reform due to Republican opposition. In his second term, Obama was able to accomplish more broader legislation including the Deferred Action for Childhood Arrivals (DACA) in 2012.</p>
+<pre class="r"><code>border_crossing_df %&gt;%
+  group_by(vehicle, year, border) %&gt;%
+  summarize(num = sum(value)) %&gt;%
+  ggplot(aes(x = year, y = log(num), 
+             color = as.factor(vehicle), group = border)) +
+  geom_point(size = 2, alpha = 0.5) +
+  geom_line(size = 1.5, alpha = 0.5) +
+  facet_grid(~border) +
+  theme(legend.position = &quot;bottom&quot;) + 
+  scale_x_continuous(limits = c(2000,2018), breaks = c(2000:2018)) +
+  scale_y_continuous(trans = scales::log_trans(base = exp(1))) +
+  labs(title = &quot;Yearly Trend of Vehicle and Non-Vehicle Border Crossings from 2000 to 2018&quot;,
+       x = &quot;Year&quot;, 
+       y = &quot;Ln Number of Crossings&quot;, 
+       color = &quot;Crossing Type&quot;,
+       caption = &quot;Number of crossings was log-transformed. Non-vehicle types include pedestrian and vehicle passenger counts.&quot;)+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))</code></pre>
+<p><img src="crossings_vehicles_files/figure-html/unnamed-chunk-5-1.png" width="90%" /></p>
 <pre class="r"><code>mexico_yearly &lt;- 
   border_crossing_df %&gt;%
   filter(border == &quot;US-Mexico Border&quot;) %&gt;%
@@ -470,14 +504,12 @@ canada_yearly &lt;-
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 canada_yearly / mexico_yearly</code></pre>
-<p><img src="crossings_vehicles_files/figure-html/unnamed-chunk-5-1.png" width="90%" /></p>
+<p><img src="crossings_vehicles_files/figure-html/unnamed-chunk-6-1.png" width="90%" /></p>
 </div>
 <div id="personal-vehicles" class="section level1">
 <h1>Personal Vehicles</h1>
 <pre class="r"><code>personal_vehicle_df &lt;-
   border_crossing_df</code></pre>
-<p>change in commercial travel</p>
-<p>empty trucks?</p>
 </div>
 
 
@@ -515,6 +547,11 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
 <script>
 $(document).ready(function ()  {

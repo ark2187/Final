@@ -1,9 +1,10 @@
 ---
-title: "Crossings Vehicles"
+title: "Vehicle and Non-Vehicle Border Crossing Trends"
 output: 
   html_document:
     toc: true
     toc_float: true
+    code_folding: hide
 ---
 
 ```{r include=FALSE}
@@ -38,7 +39,8 @@ round_exp <- function(val){
   
 ```
 
-# Vehicle Trends
+### Monthly Trends
+
 ```{r message = FALSE}
 vehicles_monthly <-
   border_crossing_df %>%
@@ -50,19 +52,23 @@ vehicles_monthly %>%
   mutate(measure = as.factor(measure), border = as.factor(border)) %>%
   ungroup() %>%
   ggplot(aes(x = month, y = log(num), group = measure , color = measure)) +
-  geom_point() +
-  geom_line() +
+  geom_point(size = 2, alpha = 0.5) +
+  geom_line(size = 1.5, alpha = 0.5) +
   facet_grid(~border) +
   theme(legend.position = "bottom") + 
   scale_x_continuous(limits = c(1,12), breaks = c(1:12)) +
   scale_y_continuous(trans = scales::log_trans(base = exp(1))) +
-  labs(title = "Monthly Trends of Vehicle Border Crossings from 2000 to 2018",
+  labs(title = "Monthly Trends of Vehicle Border Crossings from 2000 to 2018 by Vehicle Types",
        x = "Month", 
        y = "Ln Number of Crossings", 
        color = "Vehicle Type")
 ```
 
-More buses at US Mexico border- seasonal trends in US Canadian border buses and personal vehicles. 
+There are more buses and personal vehicle crossings on average at US-Mexico border, but there are more train crossings at the US-Canada border. Looking further at the monthly trends, there is some seasonality in US-Canada border crossings for buses and personal vehicles during the summer months. 
+
+The US-Mexico border has about the same number of crossings throughout the months for both empty and full rail containers, whereas the US-Canada border has consistently greater full rail container crossings. 
+
+### Yearly trends
 
 ```{r message = FALSE}
 vehicles_yearly <-
@@ -86,6 +92,27 @@ vehicles_yearly %>%
 ```
 
 The border-crossing trends look similar for both vehicle and non-vehicles, which include pedestrian crossings and passengers. We see a substantial dip in the data around 2008-2012 when President Obama serves his first term. This was a time known for a rise in deportations and lack of immigration reform due to Republican opposition. In his second term, Obama was able to accomplish more broader legislation including the Deferred Action for Childhood Arrivals (DACA) in 2012.
+
+```{r message=FALSE}
+border_crossing_df %>%
+  group_by(vehicle, year, border) %>%
+  summarize(num = sum(value)) %>%
+  ggplot(aes(x = year, y = log(num), 
+             color = as.factor(vehicle), group = border)) +
+  geom_point(size = 2, alpha = 0.5) +
+  geom_line(size = 1.5, alpha = 0.5) +
+  facet_grid(~border) +
+  theme(legend.position = "bottom") + 
+  scale_x_continuous(limits = c(2000,2018), breaks = c(2000:2018)) +
+  scale_y_continuous(trans = scales::log_trans(base = exp(1))) +
+  labs(title = "Yearly Trend of Vehicle and Non-Vehicle Border Crossings from 2000 to 2018",
+       x = "Year", 
+       y = "Ln Number of Crossings", 
+       color = "Crossing Type",
+       caption = "Number of crossings was log-transformed. Non-vehicle types include pedestrian and vehicle passenger counts.")+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
 
 ```{r message=FALSE}
 mexico_yearly <- 
@@ -132,10 +159,6 @@ canada_yearly / mexico_yearly
 personal_vehicle_df <-
   border_crossing_df
 ```
-
-change in commercial travel
-
-empty trucks?
 
 
 
