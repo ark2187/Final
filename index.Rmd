@@ -8,6 +8,8 @@ output:
 
 # About the Border Crossings Project
 
+![](images/us_border.JPG)
+
 
 blah blah 
 

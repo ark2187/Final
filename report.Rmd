@@ -20,7 +20,37 @@ Although the data we found on border crossings on Kaggle are recorded, legal, an
 
 ## Initial Questions
 
-## Data Collection and Cleaning
+## Data
+
+```{r echo=FALSE}
+border_crossing_df = readRDS(file = "border_crossing_df_clean.rds")
+```
+
+
+### Source
+
+Primary data source: [Border Crossing Entry Data](https://www.kaggle.com/akhilv11/border-crossing-entry-data) 
+
+### Cleaning 
+
+#### *Variables of Interest*
+
+**Outcome**
+`value`: A count of the number of crossings for each `measure` type at each `port_name_state` in each `month` of each `year`
+
+**Predictors**
+
+`state`: The state in which the border was located  
+`port_code`: The code for the port in which the border entry took place  
+`border`: Either the US-Canada or the US-Mexico border  
+`month`: Month 1-12 in which the crossing took place  
+`month_name`: Month name (Jan-Dec) in which the crossing took place  
+`year`: Year from 2000 to 2018 in which the crossing took place  
+`measure`: The type of vehicle or non-vehicle utilized in the border crossing. Potential entries include `r border_crossing_df %>% pull(measure) %>% unique()`  
+`long`: Longitude of the port of the crossing
+`lat`: Latitude of the port of the crossing
+`port_name_state`: The port name and state for which the crossing took place. Some ports had the same name so this variable was created to append `state` as well.
+`vehicle`: 
 
 ## Exploratory Analysis
 

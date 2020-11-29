@@ -36,22 +36,7 @@ scale_fill_discrete = scale_fill_viridis_d
 ```
 
 ```{r}
-month_df <- tibble(month = 1:12, month_name = month.name)
-
-border_crossing_df <- read_csv(file = "./Border_Crossing_Entry_Data.csv") %>% 
-  janitor::clean_names() %>%
-  mutate(date = str_sub(date, end = -13), 
-         location = str_replace(location, "POINT ", ""), 
-         port_name_state = str_c(port_name, state, sep = "_")) %>% 
-  separate(date, into = c("month", "day", "year"), sep = "/", convert = TRUE) %>%
-  left_join(month_df, by = "month") %>%
-  select(-day) %>% 
-  separate(location, into = c("long", "lat"), sep = " ") %>% 
-  mutate(long = str_replace(long, "\\(", ""), 
-         lat = str_replace(lat, "\\)", ""), 
-         long = as.numeric(long),
-         lat =  as.numeric(lat)) %>% 
-  filter(year >= 2000, year < 2019, value != 0)
+border_crossing_df = readRDS(file = "border_crossing_df_clean.rds")
 ```
 
 ```{r}

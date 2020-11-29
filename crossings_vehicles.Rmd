@@ -30,28 +30,7 @@ scale_fill_discrete = scale_fill_viridis_d
 
 
 ```{r include=FALSE}
-month_df <- tibble(month = 1:12, month_name = month.name)
-
-border_crossing_df <- read_csv(file = "./Border_Crossing_Entry_Data.csv") %>% 
-  janitor::clean_names() %>% 
-  mutate(date = str_sub(date, end = -13), 
-         location = str_replace(location, "POINT ", ""), 
-         port_name_state = str_c(port_name, state, sep = "_")) %>% 
-  separate(date, into = c("month", "day", "year"), sep = "/", convert = TRUE) %>%
-  left_join(month_df, by = "month") %>%
-  select(-day) %>% 
-  separate(location, into = c("long", "lat"), sep = " ") %>% 
-  mutate(long = str_replace(long, "\\(", ""), 
-         lat = str_replace(lat, "\\)", ""), 
-         long = as.numeric(long),
-         lat =  as.numeric(lat)) %>% 
-  filter(year >= 2000, year < 2019, value != 0)
-
-vehicles_df <- # get rid of passengers and pedestrians
-  border_crossing_df %>%
-  mutate(vehicle = if_else(str_detect(measure, "Passengers") |
-                             measure == "Pedestrians",
-                           "Non-Vehicles", "Vehicles"))
+border_crossing_df = readRDS(file = "border_crossing_df_clean.rds")
 
 round_exp <- function(val){
   exp(val) %>% round()
@@ -62,7 +41,7 @@ round_exp <- function(val){
 # Vehicle Trends
 ```{r message = FALSE}
 vehicles_monthly <-
-  vehicles_df %>%
+  border_crossing_df %>%
   filter(vehicle == "Vehicles") %>%
   group_by(border, measure, month) %>%
   summarize(num = sum(value))
@@ -87,7 +66,7 @@ More buses at US Mexico border- seasonal trends in US Canadian border buses and 
 
 ```{r message = FALSE}
 vehicles_yearly <-
-  vehicles_df %>%
+  border_crossing_df %>%
   group_by(vehicle, year) %>%
   summarize(num = sum(value))
 
@@ -110,7 +89,7 @@ The border-crossing trends look similar for both vehicle and non-vehicles, which
 
 ```{r message=FALSE}
 mexico_yearly <- 
-  vehicles_df %>%
+  border_crossing_df %>%
   filter(border == "US-Mexico Border") %>%
   group_by(vehicle, year) %>%
   summarize(num = sum(value)) %>%
@@ -128,7 +107,7 @@ mexico_yearly <-
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 canada_yearly <- 
-  vehicles_df %>%
+  border_crossing_df %>%
   filter(border == "US-Canada Border") %>%
   group_by(vehicle, year) %>%
   summarize(num = sum(value)) %>%
@@ -151,7 +130,7 @@ canada_yearly / mexico_yearly
 
 ```{r eval=FALSE}
 personal_vehicle_df <-
-  vehicles_df
+  border_crossing_df
 ```
 
 change in commercial travel

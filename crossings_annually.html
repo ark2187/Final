@@ -23,6 +23,7 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 
@@ -248,6 +249,9 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
 
 
 
@@ -384,6 +388,14 @@ div.tocify {
 
 <div class="fluid-row" id="header">
 
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
 
 
 <h1 class="title toc-ignore">Crossings Annually</h1>
@@ -391,11 +403,117 @@ div.tocify {
 </div>
 
 
-<div id="differences-in-number-of-crossings-by-year" class="section level1">
-<h1>Differences in number of crossings by year</h1>
-</div>
-<div id="number-of-crossings-with-multi-year-x-axis-x-lines-for-major-events" class="section level1">
-<h1>Number of crossings with multi year x axis, x= lines for major events</h1>
+<div id="variations-in-border-crossings-by-year" class="section level2">
+<h2><em>Variations in Border Crossings by Year</em></h2>
+<p>The table below shows us that there has been a decline in border crossings since 2000. There was a steady decline until 2011, which a slight upwards turn in 2012 that carried on through 2018.</p>
+<pre class="r"><code>## Border crossings by year
+border_crossing_df %&gt;% 
+  group_by(year) %&gt;% 
+  summarize(n = sum(value)) %&gt;% 
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">year</th>
+<th align="right">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">2000</td>
+<td align="right">540021542</td>
+</tr>
+<tr class="even">
+<td align="right">2001</td>
+<td align="right">493083902</td>
+</tr>
+<tr class="odd">
+<td align="right">2002</td>
+<td align="right">475702818</td>
+</tr>
+<tr class="even">
+<td align="right">2003</td>
+<td align="right">456392653</td>
+</tr>
+<tr class="odd">
+<td align="right">2004</td>
+<td align="right">458220298</td>
+</tr>
+<tr class="even">
+<td align="right">2005</td>
+<td align="right">450234268</td>
+</tr>
+<tr class="odd">
+<td align="right">2006</td>
+<td align="right">440296022</td>
+</tr>
+<tr class="even">
+<td align="right">2007</td>
+<td align="right">417587175</td>
+</tr>
+<tr class="odd">
+<td align="right">2008</td>
+<td align="right">399902033</td>
+</tr>
+<tr class="even">
+<td align="right">2009</td>
+<td align="right">359451762</td>
+</tr>
+<tr class="odd">
+<td align="right">2010</td>
+<td align="right">344246536</td>
+</tr>
+<tr class="even">
+<td align="right">2011</td>
+<td align="right">332226000</td>
+</tr>
+<tr class="odd">
+<td align="right">2012</td>
+<td align="right">344503916</td>
+</tr>
+<tr class="even">
+<td align="right">2013</td>
+<td align="right">356218438</td>
+</tr>
+<tr class="odd">
+<td align="right">2014</td>
+<td align="right">363314116</td>
+</tr>
+<tr class="even">
+<td align="right">2015</td>
+<td align="right">365219998</td>
+</tr>
+<tr class="odd">
+<td align="right">2016</td>
+<td align="right">367484183</td>
+</tr>
+<tr class="even">
+<td align="right">2017</td>
+<td align="right">372971276</td>
+</tr>
+<tr class="odd">
+<td align="right">2018</td>
+<td align="right">379157530</td>
+</tr>
+</tbody>
+</table>
+<p>Below is a plot of information containing average crossing values for each month in each of the 5 states with the largest number of border crossings. Each line represents a year from 2000 to 2018.</p>
+<p>Looking at these plots, we can see the clear decline in border crossings over the years in Michigan and New York. In Arizona and Texas, there is also an apparent decline, however, the volume in 2016-2018 shows that there was an upturn in these years compared to years 2012-2016. Lastly, in California, 2018 appears to be the year with the highest volume, and no clear declines annually.</p>
+<pre class="r"><code>border_crossing_df %&gt;%
+  filter(state %in% c(&quot;Texas&quot;, &quot;California&quot;, &quot;Arizona&quot;, &quot;New York&quot;, &quot;Michigan&quot;)) %&gt;%
+  group_by(state, month, year) %&gt;%  
+  summarize(mean_value = mean(value)) %&gt;%
+  ggplot(aes(x = month , y = mean_value, color = as.factor(year))) + 
+  geom_point() + 
+  geom_line() + 
+  theme(legend.position = &quot;bottom&quot;) + 
+  facet_wrap(~state) +
+  scale_x_continuous(limits = c(1,12), breaks = c(1:12)) +
+  labs(title = &quot;Average Number of Border Crossings by Year in New York&quot;,
+       x = &quot;Month&quot;, 
+       y = &quot;Number of Crossings&quot;, 
+       color = &quot;Year&quot;)</code></pre>
+<p><img src="crossings_annually_files/figure-html/unnamed-chunk-3-1.png" width="90%" /></p>
 </div>
 
 
@@ -433,6 +551,11 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
 <script>
 $(document).ready(function ()  {

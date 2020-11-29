@@ -394,7 +394,7 @@ div.tocify {
 <div id="vehicle-trends" class="section level1">
 <h1>Vehicle Trends</h1>
 <pre class="r"><code>vehicles_monthly &lt;-
-  vehicles_df %&gt;%
+  border_crossing_df %&gt;%
   filter(vehicle == &quot;Vehicles&quot;) %&gt;%
   group_by(border, measure, month) %&gt;%
   summarize(num = sum(value))
@@ -416,7 +416,7 @@ vehicles_monthly %&gt;%
 <p><img src="crossings_vehicles_files/figure-html/unnamed-chunk-3-1.png" width="90%" /></p>
 <p>More buses at US Mexico border- seasonal trends in US Canadian border buses and personal vehicles.</p>
 <pre class="r"><code>vehicles_yearly &lt;-
-  vehicles_df %&gt;%
+  border_crossing_df %&gt;%
   group_by(vehicle, year) %&gt;%
   summarize(num = sum(value))
 
@@ -436,7 +436,7 @@ vehicles_yearly %&gt;%
 <p><img src="crossings_vehicles_files/figure-html/unnamed-chunk-4-1.png" width="90%" /></p>
 <p>The border-crossing trends look similar for both vehicle and non-vehicles, which include pedestrian crossings and passengers. We see a substantial dip in the data around 2008-2012 when President Obama serves his first term. This was a time known for a rise in deportations and lack of immigration reform due to Republican opposition. In his second term, Obama was able to accomplish more broader legislation including the Deferred Action for Childhood Arrivals (DACA) in 2012.</p>
 <pre class="r"><code>mexico_yearly &lt;- 
-  vehicles_df %&gt;%
+  border_crossing_df %&gt;%
   filter(border == &quot;US-Mexico Border&quot;) %&gt;%
   group_by(vehicle, year) %&gt;%
   summarize(num = sum(value)) %&gt;%
@@ -454,7 +454,7 @@ vehicles_yearly %&gt;%
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 canada_yearly &lt;- 
-  vehicles_df %&gt;%
+  border_crossing_df %&gt;%
   filter(border == &quot;US-Canada Border&quot;) %&gt;%
   group_by(vehicle, year) %&gt;%
   summarize(num = sum(value)) %&gt;%
@@ -475,7 +475,7 @@ canada_yearly / mexico_yearly</code></pre>
 <div id="personal-vehicles" class="section level1">
 <h1>Personal Vehicles</h1>
 <pre class="r"><code>personal_vehicle_df &lt;-
-  vehicles_df</code></pre>
+  border_crossing_df</code></pre>
 <p>change in commercial travel</p>
 <p>empty trucks?</p>
 </div>

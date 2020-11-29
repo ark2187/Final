@@ -4,12 +4,69 @@ output:
   html_document:
     toc: true
     toc_float: true
+    code_folding: hide
 ---
 
-# Differences in number of crossings by year
+## *Variations in Border Crossings by Year*
 
-# Number of crossings with multi year x axis, x= lines for major events
+```{r,include=FALSE}
+library(tidyverse)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 
 
+knitr::opts_chunk$set(
+  fig.width = 10,
+  fig.asp = .6,
+  fig.height = 8,
+  out.width = "90%"
+)
+
+theme_set(theme_minimal() + theme(legend.position = "right"))
+
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+
+scale_colour_discrete = scale_color_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
+
+
+border_crossing_df = readRDS(file = "border_crossing_df_clean.rds")
+```
+
+
+The table below shows us that there has been a decline in border crossings since 2000. There was a steady decline until 2011, which a slight upwards turn in 2012 that carried on through 2018. 
+
+```{r}
+## Border crossings by year
+border_crossing_df %>% 
+  group_by(year) %>% 
+  summarize(n = sum(value)) %>% 
+  knitr::kable()
+
+```
+
+Below is a plot of information containing average crossing values for each month in each of the 5 states with the largest number of border crossings. Each line represents a year from 2000 to 2018. 
+
+Looking at these plots, we can see the clear decline in border crossings over the years in Michigan and New York. In Arizona and Texas, there is also an apparent decline, however, the volume in 2016-2018 shows that there was an upturn in these years compared to years 2012-2016. Lastly, in California, 2018 appears to be the year with the highest volume, and no clear declines annually. 
+
+```{r}
+border_crossing_df %>%
+  filter(state %in% c("Texas", "California", "Arizona", "New York", "Michigan")) %>%
+  group_by(state, month, year) %>%  
+  summarize(mean_value = mean(value)) %>%
+  ggplot(aes(x = month , y = mean_value, color = as.factor(year))) + 
+  geom_point() + 
+  geom_line() + 
+  theme(legend.position = "bottom") + 
+  facet_wrap(~state) +
+  scale_x_continuous(limits = c(1,12), breaks = c(1:12)) +
+  labs(title = "Average Number of Border Crossings by Year in New York",
+       x = "Month", 
+       y = "Number of Crossings", 
+       color = "Year")
+
+```
 
  

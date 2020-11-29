@@ -405,8 +405,28 @@ div.tocify {
 <div id="initial-questions" class="section level2">
 <h2>Initial Questions</h2>
 </div>
-<div id="data-collection-and-cleaning" class="section level2">
-<h2>Data Collection and Cleaning</h2>
+<div id="data" class="section level2">
+<h2>Data</h2>
+<div id="source" class="section level3">
+<h3>Source</h3>
+<p>Primary data source: <a href="https://www.kaggle.com/akhilv11/border-crossing-entry-data">Border Crossing Entry Data</a></p>
+</div>
+<div id="cleaning" class="section level3">
+<h3>Cleaning</h3>
+<div id="variables-of-interest" class="section level4">
+<h4><em>Variables of Interest</em></h4>
+<p><strong>Outcome</strong> <code>value</code>: A count of the number of crossings for each <code>measure</code> type at each <code>port_name_state</code> in each <code>month</code> of each <code>year</code></p>
+<p><strong>Predictors</strong></p>
+<p><code>state</code>: The state in which the border was located<br />
+<code>port_code</code>: The code for the port in which the border entry took place<br />
+<code>border</code>: Either the US-Canada or the US-Mexico border<br />
+<code>month</code>: Month 1-12 in which the crossing took place<br />
+<code>month_name</code>: Month name (Jan-Dec) in which the crossing took place<br />
+<code>year</code>: Year from 2000 to 2018 in which the crossing took place<br />
+<code>measure</code>: The type of vehicle or non-vehicle utilized in the border crossing. Potential entries include Trucks, Buses, Bus Passengers, Personal Vehicle Passengers, Truck Containers Full, Truck Containers Empty, Pedestrians, Personal Vehicles, Rail Containers Empty, Train Passengers, Rail Containers Full, Trains<br />
+<code>long</code>: Longitude of the port of the crossing <code>lat</code>: Latitude of the port of the crossing <code>port_name_state</code>: The port name and state for which the crossing took place. Some ports had the same name so this variable was created to append <code>state</code> as well. <code>vehicle</code>:</p>
+</div>
+</div>
 </div>
 <div id="exploratory-analysis" class="section level2">
 <h2>Exploratory Analysis</h2>
