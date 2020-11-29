@@ -395,6 +395,52 @@ div.tocify {
 <h1>Graphs about passengers</h1>
 <p>Methods of passenger travel</p>
 <p>Number of passengers over time</p>
+<pre class="r"><code>month_df &lt;- tibble(month = 1:12, month_name = month.name)
+
+border_crossing_df &lt;- read_csv(file = &quot;./Border_Crossing_Entry_Data.csv&quot;) %&gt;% 
+  janitor::clean_names() %&gt;%
+  mutate(date = str_sub(date, end = -13), 
+         location = str_replace(location, &quot;POINT &quot;, &quot;&quot;), 
+         port_name_state = str_c(port_name, state, sep = &quot;_&quot;)) %&gt;% 
+  separate(date, into = c(&quot;month&quot;, &quot;day&quot;, &quot;year&quot;), sep = &quot;/&quot;, convert = TRUE) %&gt;%
+  left_join(month_df, by = &quot;month&quot;) %&gt;%
+  select(-day) %&gt;% 
+  separate(location, into = c(&quot;long&quot;, &quot;lat&quot;), sep = &quot; &quot;) %&gt;% 
+  mutate(long = str_replace(long, &quot;\\(&quot;, &quot;&quot;), 
+         lat = str_replace(lat, &quot;\\)&quot;, &quot;&quot;), 
+         long = as.numeric(long),
+         lat =  as.numeric(lat)) %&gt;% 
+  filter(year &gt;= 2000, year &lt; 2019, value != 0)</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   `Port Name` = col_character(),
+##   State = col_character(),
+##   `Port Code` = col_double(),
+##   Border = col_character(),
+##   Date = col_character(),
+##   Measure = col_character(),
+##   Value = col_double(),
+##   Location = col_character()
+## )</code></pre>
+<pre class="r"><code>people_yearly &lt;-
+border_crossing_df %&gt;%
+  filter(measure %in% c(&quot;Personal Vehicle Passengers&quot;,&quot;Pedestrians&quot;,&quot;Bus Passengers&quot;, &quot;Train Passengers&quot;)) %&gt;%
+  group_by(border, measure, year) %&gt;%
+  summarize(num = sum(value))</code></pre>
+<pre><code>## `summarise()` regrouping output by &#39;border&#39;, &#39;measure&#39; (override with `.groups` argument)</code></pre>
+<pre class="r"><code>people_yearly %&gt;%
+    mutate(measure = as.factor(measure), border = as.factor(border)) %&gt;%
+  ungroup() %&gt;%
+  ggplot(aes(x = year, y = num , group = measure , color = measure)) +
+  geom_point() +
+  geom_line() +
+  facet_grid(~border) +
+  theme(legend.position = &quot;bottom&quot;) + 
+  labs(title = &quot;Yearly Trends of People Crossings from 2000 to 2018&quot;,
+       x = &quot;year&quot;, 
+       y = &quot;Number of Crossings&quot;, 
+       color = &quot;measure&quot;)</code></pre>
+<p><img src="crossings_people_files/figure-html/unnamed-chunk-3-1.png" width="90%" /></p>
 </div>
 
 

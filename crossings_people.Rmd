@@ -13,5 +13,66 @@ Methods of passenger travel
 Number of passengers over time
 
 
+```{r include=FALSE}
+library(tidyverse)
+library(patchwork)
 
- 
+knitr::opts_chunk$set(
+  fig.width = 10,
+  fig.asp = .6,
+  fig.height = 8,
+  out.width = "90%"
+)
+
+theme_set(theme_minimal() + theme(legend.position = "right"))
+
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+
+scale_colour_discrete = scale_color_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
+```
+
+```{r}
+month_df <- tibble(month = 1:12, month_name = month.name)
+
+border_crossing_df <- read_csv(file = "./Border_Crossing_Entry_Data.csv") %>% 
+  janitor::clean_names() %>%
+  mutate(date = str_sub(date, end = -13), 
+         location = str_replace(location, "POINT ", ""), 
+         port_name_state = str_c(port_name, state, sep = "_")) %>% 
+  separate(date, into = c("month", "day", "year"), sep = "/", convert = TRUE) %>%
+  left_join(month_df, by = "month") %>%
+  select(-day) %>% 
+  separate(location, into = c("long", "lat"), sep = " ") %>% 
+  mutate(long = str_replace(long, "\\(", ""), 
+         lat = str_replace(lat, "\\)", ""), 
+         long = as.numeric(long),
+         lat =  as.numeric(lat)) %>% 
+  filter(year >= 2000, year < 2019, value != 0)
+```
+
+```{r}
+
+people_yearly <-
+border_crossing_df %>%
+  filter(measure %in% c("Personal Vehicle Passengers","Pedestrians","Bus Passengers", "Train Passengers")) %>%
+  group_by(border, measure, year) %>%
+  summarize(num = sum(value))
+
+
+people_yearly %>%
+    mutate(measure = as.factor(measure), border = as.factor(border)) %>%
+  ungroup() %>%
+  ggplot(aes(x = year, y = num , group = measure , color = measure)) +
+  geom_point() +
+  geom_line() +
+  facet_grid(~border) +
+  theme(legend.position = "bottom") + 
+  labs(title = "Yearly Trends of People Crossings from 2000 to 2018",
+       x = "year", 
+       y = "Number of Crossings", 
+       color = "measure")
+```
