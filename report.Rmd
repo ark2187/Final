@@ -1,14 +1,12 @@
 ---
-title: "Report"
+title: "Border Crossings Report"
 output: 
   html_document:
     toc: true
     toc_float: true
 ---
 
-# Border Crossings Report
-
-## Motivations
+## **Motivations**
 
 Immigration has been a hotly contested issue during Trump's presidency. Marking his words of building a "big, beautiful wall" in 2016, President Donald Trump got the green light from The Supreme Court in 2019 and $2.5 billion from the Pentagon's budget to building up the U.S.-Mexico border.
 
@@ -16,13 +14,22 @@ Ironically, despite the promise of his campaign to stop illegal immigration and 
 
 Although the data we found on border crossings on Kaggle are recorded, legal, and do not run into 2020, we were interested in looking at border crossing trends because of this issue. Understanding the change in legal border crossing is crucial when considering the United States and Mexico's mutually dependent relationship in many aspects: including economy, separated immigrants' family issues, etc. Indeed, Mexico has remained the United States' second-largest export market since 1995, with exports totaling $242 billion in 2017.This analysis will help us understand and show how the border crossings play into life (e.g. movement of goods, commuting, holiday travel).
 
-## Related Work
-The following resources are a sample of what inspired this project.
-* Trump wall: How much has he actually built?, BBC News, October 2020: [link](https://www.bbc.com/news/world-us-canada-46824649) 
+## **Related Work**
+The following resources are a sample of what inspired this project<br>
+* Trump wall: How much has he actually built?, BBC News, October 2020: [link](https://www.bbc.com/news/world-us-canada-46824649)  <br>
+* A Decade of Decline in Person Crossings From Mexico and Canada Into the United States, Jenny Guarino, Bureau of Transportation Statistics, May 2017: [link] (https://www.bts.gov/sites/bts.dot.gov/files/legacy/publications/special_reports_and_issue_briefs/special_report/2011_02_27/pdf/entire.pdf)
 
-## Initial Questions
 
-## Data
+## **Initial Questions**
+
+* What is the distribution of recorded crossings between the US-Canada and US-Mexico borders?
+* Is there a time-trend of recorded crossings when comparing each year's record? Or Is there a noticeable change in total number of recorded crossings?
+* How busy are the busiest ports? Where are the busiest ports?
+* Is there a time of the year when there are the most crossings? Are there holiday trends?
+* What types of vehicles are crossing the borders the most? For a few ports (including Canadian ports)?
+* Are there seasonal goods or commerce trends? (E.g., more private care cross US-Canada in the summer and maybe more truck crossings from Mexico in produce seasons.)
+
+## **Data**
 
 ```{r echo=FALSE}
 border_crossing_df = readRDS(file = "border_crossing_df_clean.rds")
@@ -31,7 +38,9 @@ border_crossing_df = readRDS(file = "border_crossing_df_clean.rds")
 
 ### Source
 
-Primary data source: [Border Crossing Entry Data](https://www.kaggle.com/akhilv11/border-crossing-entry-data) 
+Primary data source: [Border Crossing Entry Data](https://www.kaggle.com/akhilv11/border-crossing-entry-data) <br>
+
+The Bureau of Transportation Statistics (BTS) Border Crossing Data is summary statistics for border-crossing returning the the U.S. at the U.S.-Canada and the U.S.-Mexico border at the port level. Data are collected at ports of entry by U.S. and include the number of veheciles, containers, passengers, or pedestriants.
 
 ### Cleaning 
 
@@ -54,11 +63,16 @@ Primary data source: [Border Crossing Entry Data](https://www.kaggle.com/akhilv1
 `port_name_state`: The port name and state for which the crossing took place. Some ports had the same name so this variable was created to append `state` as well.
 `vehicle`: 
 
-## Exploratory Analysis
+## **Exploratory Analysis** 
 
-## Description of Approaches and Alternate Approaches
+In the Exploratory Analyses tab, you can observe <br>
+* change in the number of border crossing across years <br>
+* seasonal trend <br>
+* difference between each vehicle type. 
 
-## Discussion
+## **Description of Approaches and Alternate Approaches**
+
+## **Discussion**
 
 
  
