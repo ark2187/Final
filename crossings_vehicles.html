@@ -455,7 +455,7 @@ vehicles_yearly %&gt;%
   group_by(vehicle, year, border) %&gt;%
   summarize(num = sum(value)) %&gt;%
   ggplot(aes(x = year, y = log(num), 
-             color = as.factor(vehicle), group = border)) +
+             color = as.factor(vehicle), as.factor(vehicle))) +
   geom_point(size = 2, alpha = 0.5) +
   geom_line(size = 1.5, alpha = 0.5) +
   facet_grid(~border) +
