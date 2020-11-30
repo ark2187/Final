@@ -114,54 +114,8 @@ border_crossing_df %>%
 ```
 
 
-```{r message=FALSE}
-mexico_yearly <- 
-  border_crossing_df %>%
-  filter(border == "US-Mexico Border") %>%
-  group_by(vehicle, year) %>%
-  summarize(num = sum(value)) %>%
-  ggplot(aes(x = year, y = log(num), color = as.factor(vehicle))) +
-  geom_point(size = 2, alpha = 0.5) +
-  geom_line(size = 1.5, alpha = 0.5) +
-  theme(legend.position = "bottom") + 
-  scale_x_continuous(limits = c(2000,2018), breaks = c(2000:2018)) +
-  scale_y_continuous(trans = scales::log_trans(base = exp(1))) +
-  labs(title = "Yearly Trend of Vehicle and Non-Vehicle US-Mexico Border Crossings from 2000 to 2018",
-       x = "Year", 
-       y = "Ln Number of Crossings",
-       color = "Crossing Type",
-       caption = "Number of crossings was log-transformed. Non-vehicle types include pedestrian and vehicle passenger counts.")+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
-canada_yearly <- 
-  border_crossing_df %>%
-  filter(border == "US-Canada Border") %>%
-  group_by(vehicle, year) %>%
-  summarize(num = sum(value)) %>%
-  ggplot(aes(x = year, y = log(num), color = as.factor(vehicle))) +
-  geom_point(size = 2, alpha = 0.5) +
-  geom_line(size = 1.5, alpha = 0.5) +
-  theme(legend.position = "none") +
-  scale_x_continuous(limits = c(2000,2018), breaks = c(2000:2018)) +
-  scale_y_continuous(trans = scales::log_trans(base = exp(1))) +
-  labs(title = "Yearly Trend of Vehicle and Non-Vehicle US-Canada Border Crossings from 2000 to 2018",
-       x = "Year", 
-       y = "Ln Number of Crossings") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
-canada_yearly / mexico_yearly
-```
-
-
-# Personal Vehicles
-
-```{r eval=FALSE}
-personal_vehicle_df <-
-  border_crossing_df
-```
-
 # Texas
-```{r}
+```{r message=FALSE}
 tx_ca_monthly <-
   border_crossing_df %>%
   filter(state %in% c("California", "Texas")) %>%

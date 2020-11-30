@@ -1,12 +1,10 @@
 ---
-title: "Report"
+title: "Border Crossings Report"
 output: 
   html_document:
     toc: true
     toc_float: true
 ---
-
-# Border Crossings Report
 
 ## Motivations
 
@@ -18,20 +16,24 @@ Although the data we found on border crossings on Kaggle are recorded, legal, an
 
 ## Related Work
 The following resources are a sample of what inspired this project.
+
 * Trump wall: How much has he actually built?, BBC News, October 2020: [link](https://www.bbc.com/news/world-us-canada-46824649) 
 
 ## Initial Questions
 
+* Are there any seasonal trends in border crossings? What are the general trends for vehicle compared to non-vehicle crossings, by month and year?
+
 ## Data
 
-```{r echo=FALSE}
+```{r include=FALSE}
+library(tidyverse)
 border_crossing_df = readRDS(file = "border_crossing_df_clean.rds")
 ```
 
 
 ### Source
 
-Primary data source: [Border Crossing Entry Data](https://www.kaggle.com/akhilv11/border-crossing-entry-data) 
+Primary data source from Kaggle: [Border Crossing Entry Data](https://www.kaggle.com/akhilv11/border-crossing-entry-data) 
 
 ### Cleaning 
 
@@ -54,11 +56,31 @@ Primary data source: [Border Crossing Entry Data](https://www.kaggle.com/akhilv1
 `port_name_state`: The port name and state for which the crossing took place. Some ports had the same name so this variable was created to append `state` as well.
 `vehicle`: 
 
-## Exploratory Analysis
+## Exploratory Data Analysis
+
+#### _Crossings Monthly_
+
+#### _Crossings Annually_
+
+#### _Crossings of People_
+
+#### _Crossings of Vehicles_
+
+**Question: Are there any seasonal trends in border crossings? What are the general trends for vehicle compared to non-vehicle crossings, by month and year?**
+
+Follow this link to [Crossings of Vehicles](crossings_vehicles.html).
+
+Our graphs visualize both monthly and annual trends of border crossings for vehicles and non-vehicles, which we defined to be any passengers or pedestrians. We decided to explore the natural-log number of crossings due to a very right-skew of the data. This allowed us to examine the differences in trends for vehicle types, and to see that buses and personal vehicles have seasonality at the US-Canada border specifically in the summer months.
+
+We also looked at the overall annual trends in border crossings by vehicles and non-vehicles and saw that they both ebb and flow similarly. This may be because the counts of passengers are correlated with the number of vehicles they correspond to, therefore the differences in the number of crossings is of less importance than the visual trend.
+
+Finally, we further stratified our exploration of annual trends by border. We find that visually, there are consistently many more crossings at the US-Mexico border than at the US-Canada border. There is also a bigger gap between the vehicle and non-vehicle lines for the US-Mexico border, likely showing that there are more pedestrians and people per vehicle that for the US-Canada border. The lowest number of crossings at the US-Canada border is in 2009, whereas it is in 2011 at the US-Mexico border.
+
 
 ## Description of Approaches and Alternate Approaches
 
 ## Discussion
 
+Lastly, in looking at the monthly and yearly trends of border crossings for vehicles and non-vehicles, we saw that the US-Mexico border has a larger volume of crossings and that there is some seasonality in US-Canada border crossings for personal vehicles and buses. We thought we would see seasonality at the US-Canada border during the summer months for summer vacation. We also expected to see a drop in border crossings overall during President Obama's first term around 2008-2012 due to nation-wide immigration issues. We also note that there is less seasonality in all other vehicles and at the US-Mexico border because commercial travel is not influenced by holiday/vacation seasons.
 
  

@@ -11,7 +11,7 @@
 
 
 
-<title>Report</title>
+<title>Border Crossings Report</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -367,7 +367,7 @@ div.tocify {
       <a href="crossings_people.html">Crossings of People</a>
     </li>
     <li>
-      <a href="crossings_vehicles.html">Crossings of Vehicles, Personal, Commercial</a>
+      <a href="crossings_vehicles.html">Crossings of Vehicles</a>
     </li>
   </ul>
 </li>
@@ -386,13 +386,11 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Report</h1>
+<h1 class="title toc-ignore">Border Crossings Report</h1>
 
 </div>
 
 
-<div id="border-crossings-report" class="section level1">
-<h1>Border Crossings Report</h1>
 <div id="motivations" class="section level2">
 <h2>Motivations</h2>
 <p>Immigration has been a hotly contested issue during Trump’s presidency. Marking his words of building a “big, beautiful wall” in 2016, President Donald Trump got the green light from The Supreme Court in 2019 and $2.5 billion from the Pentagon’s budget to building up the U.S.-Mexico border.</p>
@@ -401,16 +399,22 @@ div.tocify {
 </div>
 <div id="related-work" class="section level2">
 <h2>Related Work</h2>
-<p>The following resources are a sample of what inspired this project. * Trump wall: How much has he actually built?, BBC News, October 2020: <a href="https://www.bbc.com/news/world-us-canada-46824649">link</a></p>
+<p>The following resources are a sample of what inspired this project.</p>
+<ul>
+<li>Trump wall: How much has he actually built?, BBC News, October 2020: <a href="https://www.bbc.com/news/world-us-canada-46824649">link</a></li>
+</ul>
 </div>
 <div id="initial-questions" class="section level2">
 <h2>Initial Questions</h2>
+<ul>
+<li>Are there any seasonal trends in border crossings? What are the general trends for vehicle compared to non-vehicle crossings, by month and year?</li>
+</ul>
 </div>
 <div id="data" class="section level2">
 <h2>Data</h2>
 <div id="source" class="section level3">
 <h3>Source</h3>
-<p>Primary data source: <a href="https://www.kaggle.com/akhilv11/border-crossing-entry-data">Border Crossing Entry Data</a></p>
+<p>Primary data source from Kaggle: <a href="https://www.kaggle.com/akhilv11/border-crossing-entry-data">Border Crossing Entry Data</a></p>
 </div>
 <div id="cleaning" class="section level3">
 <h3>Cleaning</h3>
@@ -429,15 +433,32 @@ div.tocify {
 </div>
 </div>
 </div>
-<div id="exploratory-analysis" class="section level2">
-<h2>Exploratory Analysis</h2>
+<div id="exploratory-data-analysis" class="section level2">
+<h2>Exploratory Data Analysis</h2>
+<div id="crossings-monthly" class="section level4">
+<h4><em>Crossings Monthly</em></h4>
+</div>
+<div id="crossings-annually" class="section level4">
+<h4><em>Crossings Annually</em></h4>
+</div>
+<div id="crossings-of-people" class="section level4">
+<h4><em>Crossings of People</em></h4>
+</div>
+<div id="crossings-of-vehicles" class="section level4">
+<h4><em>Crossings of Vehicles</em></h4>
+<p><strong>Question: Are there any seasonal trends in border crossings? What are the general trends for vehicle compared to non-vehicle crossings, by month and year?</strong></p>
+<p>Follow this link to <a href="crossings_vehicles.html">Crossings of Vehicles</a>.</p>
+<p>Our graphs visualize both monthly and annual trends of border crossings for vehicles and non-vehicles, which we defined to be any passengers or pedestrians. We decided to explore the natural-log number of crossings due to a very right-skew of the data. This allowed us to examine the differences in trends for vehicle types, and to see that buses and personal vehicles have seasonality at the US-Canada border specifically in the summer months.</p>
+<p>We also looked at the overall annual trends in border crossings by vehicles and non-vehicles and saw that they both ebb and flow similarly. This may be because the counts of passengers are correlated with the number of vehicles they correspond to, therefore the differences in the number of crossings is of less importance than the visual trend.</p>
+<p>Finally, we further stratified our exploration of annual trends by border. We find that visually, there are consistently many more crossings at the US-Mexico border than at the US-Canada border. There is also a bigger gap between the vehicle and non-vehicle lines for the US-Mexico border, likely showing that there are more pedestrians and people per vehicle that for the US-Canada border. The lowest number of crossings at the US-Canada border is in 2009, whereas it is in 2011 at the US-Mexico border.</p>
+</div>
 </div>
 <div id="description-of-approaches-and-alternate-approaches" class="section level2">
 <h2>Description of Approaches and Alternate Approaches</h2>
 </div>
 <div id="discussion" class="section level2">
 <h2>Discussion</h2>
-</div>
+<p>Lastly, in looking at the monthly and yearly trends of border crossings for vehicles and non-vehicles, we saw that the US-Mexico border has a larger volume of crossings and that there is some seasonality in US-Canada border crossings for personal vehicles and buses. We thought we would see seasonality at the US-Canada border during the summer months for summer vacation. We also expected to see a drop in border crossings overall during President Obama’s first term around 2008-2012 due to nation-wide immigration issues. We also note that there is less seasonality in all other vehicles and at the US-Mexico border because commercial travel is not influenced by holiday/vacation seasons.</p>
 </div>
 
 

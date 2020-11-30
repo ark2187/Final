@@ -147,7 +147,7 @@ renderPlotly({
 ```{r}
 renderPlotly({
     border_crossing_df %>%
-    group_by(border, month_name, year, measure) %>%
+    group_by(border, measure, month_name, year) %>%
     summarize(num = sum(value)) %>%
     mutate(type_tf = map(measure, crossings_type_func,
                           input[["crossings_choice"]])) %>%
@@ -155,24 +155,11 @@ renderPlotly({
            border == input[["border_choice"]],
            year == input[["year_choice"]]) %>%
     plot_ly(x = ~month_name, y = ~log(num), color = ~measure, 
-            type = "scatter", mode = "lines+markers",
+            group = ~measure, type = "scatter", mode = "line",
             colors = "viridis", alpha = 0.5) %>%
     layout(xaxis = list(title = 'Month'),
            yaxis = list(title = 'Ln Number of Crossings',
                         type = "log"))
 })
-
-# border_crossing_df %>%
-#     group_by(border, month, year, measure) %>%
-#     summarize(num = sum(value)) %>%
-#     filter(measure %in% c("Buses", "Pedestrians"),
-#            border == "US-Canada Border",
-#            year == 2018) %>%
-#     plot_ly(x = ~as.factor(month), y = ~log(num), color = ~measure, 
-#             type = "scatter", mode = "lines+markers",
-#             colors = "viridis", alpha = 0.5) %>%
-#     layout(xaxis = list(title = 'Month'),
-#            yaxis = list(title = 'Ln Number of Crossings',
-#                         type = "log"))
 ```
 

@@ -371,7 +371,7 @@ div.tocify {
       <a href="crossings_people.html">Crossings of People</a>
     </li>
     <li>
-      <a href="crossings_vehicles.html">Crossings of Vehicles, Personal, Commercial</a>
+      <a href="crossings_vehicles.html">Crossings of Vehicles</a>
     </li>
   </ul>
 </li>
@@ -469,47 +469,6 @@ vehicles_yearly %&gt;%
        caption = &quot;Number of crossings was log-transformed. Non-vehicle types include pedestrian and vehicle passenger counts.&quot;)+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))</code></pre>
 <p><img src="crossings_vehicles_files/figure-html/unnamed-chunk-5-1.png" width="90%" /></p>
-<pre class="r"><code>mexico_yearly &lt;- 
-  border_crossing_df %&gt;%
-  filter(border == &quot;US-Mexico Border&quot;) %&gt;%
-  group_by(vehicle, year) %&gt;%
-  summarize(num = sum(value)) %&gt;%
-  ggplot(aes(x = year, y = log(num), color = as.factor(vehicle))) +
-  geom_point(size = 2, alpha = 0.5) +
-  geom_line(size = 1.5, alpha = 0.5) +
-  theme(legend.position = &quot;bottom&quot;) + 
-  scale_x_continuous(limits = c(2000,2018), breaks = c(2000:2018)) +
-  scale_y_continuous(trans = scales::log_trans(base = exp(1))) +
-  labs(title = &quot;Yearly Trend of Vehicle and Non-Vehicle US-Mexico Border Crossings from 2000 to 2018&quot;,
-       x = &quot;Year&quot;, 
-       y = &quot;Ln Number of Crossings&quot;,
-       color = &quot;Crossing Type&quot;,
-       caption = &quot;Number of crossings was log-transformed. Non-vehicle types include pedestrian and vehicle passenger counts.&quot;)+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
-canada_yearly &lt;- 
-  border_crossing_df %&gt;%
-  filter(border == &quot;US-Canada Border&quot;) %&gt;%
-  group_by(vehicle, year) %&gt;%
-  summarize(num = sum(value)) %&gt;%
-  ggplot(aes(x = year, y = log(num), color = as.factor(vehicle))) +
-  geom_point(size = 2, alpha = 0.5) +
-  geom_line(size = 1.5, alpha = 0.5) +
-  theme(legend.position = &quot;none&quot;) +
-  scale_x_continuous(limits = c(2000,2018), breaks = c(2000:2018)) +
-  scale_y_continuous(trans = scales::log_trans(base = exp(1))) +
-  labs(title = &quot;Yearly Trend of Vehicle and Non-Vehicle US-Canada Border Crossings from 2000 to 2018&quot;,
-       x = &quot;Year&quot;, 
-       y = &quot;Ln Number of Crossings&quot;) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
-canada_yearly / mexico_yearly</code></pre>
-<p><img src="crossings_vehicles_files/figure-html/unnamed-chunk-6-1.png" width="90%" /></p>
-</div>
-<div id="personal-vehicles" class="section level1">
-<h1>Personal Vehicles</h1>
-<pre class="r"><code>personal_vehicle_df &lt;-
-  border_crossing_df</code></pre>
 </div>
 <div id="texas" class="section level1">
 <h1>Texas</h1>
@@ -534,9 +493,9 @@ canada_yearly / mexico_yearly</code></pre>
     measure = as.factor(measure_short),
     state = as.factor(state)) %&gt;%
   group_by(state, measure_short, year, month) %&gt;%
-  summarize(num = sum(value))</code></pre>
-<pre><code>## `summarise()` regrouping output by &#39;state&#39;, &#39;measure_short&#39;, &#39;year&#39; (override with `.groups` argument)</code></pre>
-<pre class="r"><code>tx_ca_monthly %&gt;%
+  summarize(num = sum(value))
+
+tx_ca_monthly %&gt;%
   ungroup() %&gt;%
   ggplot(aes(x = year, y = log(num), color = measure_short)) +
   geom_point(alpha = 0.5, position = position_jitter(w = 0.2, h = 0)) +
@@ -547,7 +506,7 @@ canada_yearly / mexico_yearly</code></pre>
        x = &quot;Year&quot;, 
        y = &quot;Ln Number of Crossings&quot;, 
        color = &quot;Vehicle Type&quot;)</code></pre>
-<p><img src="crossings_vehicles_files/figure-html/unnamed-chunk-8-1.png" width="90%" /></p>
+<p><img src="crossings_vehicles_files/figure-html/unnamed-chunk-6-1.png" width="90%" /></p>
 </div>
 
 
