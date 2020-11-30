@@ -182,20 +182,43 @@ tx_ca_monthly <-
     ),
     measure = as.factor(measure_short),
     state = as.factor(state)) %>%
-  group_by(state, measure_short, month) %>%
+  group_by(state, measure_short, year, month) %>%
   summarize(num = sum(value))
 
 tx_ca_monthly %>%
   ungroup() %>%
-  ggplot(aes(x = month, y = log(num), color = measure_short)) +
+  ggplot(aes(x = year, y = log(num), color = measure_short)) +
   geom_point(alpha = 0.5, position = position_jitter(w = 0.2, h = 0)) +
   facet_grid(~state) +
   theme(legend.position = "bottom") + 
   scale_x_continuous(limits = c(1,12), breaks = c(1:12)) +
   scale_y_continuous(trans = scales::log_trans(base = exp(1))) +
-  labs(title = "Monthly Trends of Vehicle Border Crossings from 2000 to 2018 by Vehicle Types",
-       x = "Month", 
+  labs(title = "Yearly Trends of Vehicle Border Crossings from 2000 to 2018 by Vehicle Types",
+       x = "Year", 
        y = "Ln Number of Crossings", 
        color = "Vehicle Type")
+
+#holiday_monthly <-
+#  border_crossing_df %>%
+#  filter(vehicle == "Non-Vehicles") %>%
+#  filter(month == 12) %>%
+#  mutate(measure = as.factor(measure),
+#    vehicle = as.factor(vehicle)) %>%
+#  group_by(border, measure, year, day) %>%
+#  summarize(num = sum(value))
+
+#holiday_monthly %>%
+#  ungroup() %>%
+#  filter(year == 2018) %>%
+#  ggplot(aes(x = day, y = log(num), color = measure_short)) +
+#  geom_point(alpha = 0.5, position = position_jitter(w = 0.2, h = 0)) +
+#  facet_grid(~border) +
+#  theme(legend.position = "bottom") + 
+#  scale_x_continuous(limits = c(1,12), breaks = c(1:12)) +
+#  scale_y_continuous(trans = scales::log_trans(base = exp(1))) +
+#  labs(title = "Yearly Trends of Vehicle Border Crossings from 2000 to 2018 by Vehicle Types",
+#       x = "Year", 
+#       y = "Ln Number of Crossings", 
+#       color = "Vehicle Type")
 ```
  

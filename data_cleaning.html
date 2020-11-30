@@ -615,25 +615,25 @@ body {
 </ul>
 <!-- end list -->
 
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">month_df &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">month =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">12</span>, <span class="dt">month_name =</span> month.name)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb1-3" data-line-number="3">border_crossing_df =<span class="st"> </span><span class="kw">read_csv</span>(<span class="dt">file =</span> <span class="st">&quot;./Border_Crossing_Entry_Data.csv&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="st">  </span>janitor<span class="op">::</span><span class="kw">clean_names</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">date =</span> <span class="kw">str_sub</span>(date, <span class="dt">end =</span> <span class="dv">-13</span>), </a>
-<a class="sourceLine" id="cb1-6" data-line-number="6">         <span class="dt">location =</span> <span class="kw">str_replace</span>(location, <span class="st">&quot;POINT &quot;</span>, <span class="st">&quot;&quot;</span>), </a>
-<a class="sourceLine" id="cb1-7" data-line-number="7">         <span class="dt">port_name_state =</span> <span class="kw">str_c</span>(port_name, state, <span class="dt">sep =</span> <span class="st">&quot;_&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb1-8" data-line-number="8"><span class="st">  </span><span class="kw">separate</span>(date, <span class="dt">into =</span> <span class="kw">c</span>(<span class="st">&quot;month&quot;</span>, <span class="st">&quot;day&quot;</span>, <span class="st">&quot;year&quot;</span>), <span class="dt">sep =</span> <span class="st">&quot;/&quot;</span>, <span class="dt">convert =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb1-9" data-line-number="9"><span class="st">    </span><span class="kw">left_join</span>(month_df, <span class="dt">by =</span> <span class="st">&quot;month&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb1-10" data-line-number="10"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>day, <span class="op">-</span>port_name) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb1-11" data-line-number="11"><span class="st">  </span><span class="kw">separate</span>(location, <span class="dt">into =</span> <span class="kw">c</span>(<span class="st">&quot;long&quot;</span>, <span class="st">&quot;lat&quot;</span>), <span class="dt">sep =</span> <span class="st">&quot; &quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb1-12" data-line-number="12"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">long =</span> <span class="kw">str_replace</span>(long, <span class="st">&quot;</span><span class="ch">\\</span><span class="st">(&quot;</span>, <span class="st">&quot;&quot;</span>), </a>
-<a class="sourceLine" id="cb1-13" data-line-number="13">         <span class="dt">lat =</span> <span class="kw">str_replace</span>(lat, <span class="st">&quot;</span><span class="ch">\\</span><span class="st">)&quot;</span>, <span class="st">&quot;&quot;</span>), </a>
-<a class="sourceLine" id="cb1-14" data-line-number="14">         <span class="dt">long =</span> <span class="kw">as.numeric</span>(long),</a>
-<a class="sourceLine" id="cb1-15" data-line-number="15">         <span class="dt">lat =</span>  <span class="kw">as.numeric</span>(lat), </a>
-<a class="sourceLine" id="cb1-16" data-line-number="16">         <span class="dt">vehicle =</span> <span class="kw">if_else</span>(<span class="kw">str_detect</span>(measure, <span class="st">&quot;Passengers&quot;</span>) <span class="op">|</span></a>
-<a class="sourceLine" id="cb1-17" data-line-number="17"><span class="st">                             </span>measure <span class="op">==</span><span class="st"> &quot;Pedestrians&quot;</span>,</a>
-<a class="sourceLine" id="cb1-18" data-line-number="18">                           <span class="st">&quot;Non-Vehicles&quot;</span>, <span class="st">&quot;Vehicles&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb1-19" data-line-number="19"><span class="st">  </span><span class="kw">filter</span>(year <span class="op">&gt;=</span><span class="st"> </span><span class="dv">2000</span>, year <span class="op">&lt;</span><span class="st"> </span><span class="dv">2019</span>, value <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>month_df &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">month =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">12</span>, <span class="dt">month_name =</span> month.name)</span>
+<span id="cb1-2"><a href="#cb1-2"></a></span>
+<span id="cb1-3"><a href="#cb1-3"></a>border_crossing_df =<span class="st"> </span><span class="kw">read_csv</span>(<span class="dt">file =</span> <span class="st">&quot;./Border_Crossing_Entry_Data.csv&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="st">  </span>janitor<span class="op">::</span><span class="kw">clean_names</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">date =</span> <span class="kw">str_sub</span>(date, <span class="dt">end =</span> <span class="dv">-13</span>), </span>
+<span id="cb1-6"><a href="#cb1-6"></a>         <span class="dt">location =</span> <span class="kw">str_replace</span>(location, <span class="st">&quot;POINT &quot;</span>, <span class="st">&quot;&quot;</span>), </span>
+<span id="cb1-7"><a href="#cb1-7"></a>         <span class="dt">port_name_state =</span> <span class="kw">str_c</span>(port_name, state, <span class="dt">sep =</span> <span class="st">&quot;_&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1-8"><a href="#cb1-8"></a><span class="st">  </span><span class="kw">separate</span>(date, <span class="dt">into =</span> <span class="kw">c</span>(<span class="st">&quot;month&quot;</span>, <span class="st">&quot;day&quot;</span>, <span class="st">&quot;year&quot;</span>), <span class="dt">sep =</span> <span class="st">&quot;/&quot;</span>, <span class="dt">convert =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1-9"><a href="#cb1-9"></a><span class="st">    </span><span class="kw">left_join</span>(month_df, <span class="dt">by =</span> <span class="st">&quot;month&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb1-10"><a href="#cb1-10"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>day, <span class="op">-</span>port_name) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1-11"><a href="#cb1-11"></a><span class="st">  </span><span class="kw">separate</span>(location, <span class="dt">into =</span> <span class="kw">c</span>(<span class="st">&quot;long&quot;</span>, <span class="st">&quot;lat&quot;</span>), <span class="dt">sep =</span> <span class="st">&quot; &quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1-12"><a href="#cb1-12"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">long =</span> <span class="kw">str_replace</span>(long, <span class="st">&quot;</span><span class="ch">\\</span><span class="st">(&quot;</span>, <span class="st">&quot;&quot;</span>), </span>
+<span id="cb1-13"><a href="#cb1-13"></a>         <span class="dt">lat =</span> <span class="kw">str_replace</span>(lat, <span class="st">&quot;</span><span class="ch">\\</span><span class="st">)&quot;</span>, <span class="st">&quot;&quot;</span>), </span>
+<span id="cb1-14"><a href="#cb1-14"></a>         <span class="dt">long =</span> <span class="kw">as.numeric</span>(long),</span>
+<span id="cb1-15"><a href="#cb1-15"></a>         <span class="dt">lat =</span>  <span class="kw">as.numeric</span>(lat), </span>
+<span id="cb1-16"><a href="#cb1-16"></a>         <span class="dt">vehicle =</span> <span class="kw">if_else</span>(<span class="kw">str_detect</span>(measure, <span class="st">&quot;Passengers&quot;</span>) <span class="op">|</span></span>
+<span id="cb1-17"><a href="#cb1-17"></a><span class="st">                             </span>measure <span class="op">==</span><span class="st"> &quot;Pedestrians&quot;</span>,</span>
+<span id="cb1-18"><a href="#cb1-18"></a>                           <span class="st">&quot;Non-Vehicles&quot;</span>, <span class="st">&quot;Vehicles&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1-19"><a href="#cb1-19"></a><span class="st">  </span><span class="kw">filter</span>(year <span class="op">&gt;=</span><span class="st"> </span><span class="dv">2000</span>, year <span class="op">&lt;</span><span class="st"> </span><span class="dv">2019</span>, value <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>)</span></code></pre></div>
 <pre><code>## Parsed with column specification:
 ## cols(
 ##   `Port Name` = col_character(),
@@ -646,7 +646,7 @@ body {
 ##   Location = col_character()
 ## )
 </code></pre>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">saveRDS</span>(border_crossing_df, <span class="dt">file =</span> <span class="st">&quot;border_crossing_df_clean.rds&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">saveRDS</span>(border_crossing_df, <span class="dt">file =</span> <span class="st">&quot;border_crossing_df_clean.rds&quot;</span>)</span></code></pre></div>
 
 </body>
 </html>
