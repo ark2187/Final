@@ -113,6 +113,10 @@ border_crossing_df %>%
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
+The US-Mexico border has a higher volume of crossings than the US-Canada border. There is also a larger gap between the vehicle and non-vehicle lines for the US-Mexico border, likely showing that there are more pedestrians and people per vehicle that for the US-Canada border. 
+
+The lowest number of crossings at the US-Canada border is in 2009 for vehicles and in 2016 for non-vehicles, whereas it is in 2011 at the US-Mexico border for both types. The trends over the years are different: there is a steady decrease over the years at the US-Mexico border before rising again in 2011, whereas the US-Canada border looks to have three drops in the number of crossings.
+
 
 # Texas
 ```{r message=FALSE}
