@@ -5,6 +5,7 @@ output:
     toc: true
     toc_float: true
     code_folding: hide
+    theme: yeti
 ---
 
 ## *Variations in Border Crossings by Year*
