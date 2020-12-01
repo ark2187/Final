@@ -26,17 +26,6 @@
 <script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
-<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
-
-<style type="text/css">
-  code{white-space: pre-wrap;}
-  span.smallcaps{font-variant: small-caps;}
-  span.underline{text-decoration: underline;}
-  div.column{display: inline-block; vertical-align: top; width: 50%;}
-  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-  ul.task-list{list-style: none;}
-    </style>
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -419,63 +408,63 @@ div.tocify {
 <p>In the table below, we see that the months with the highest number of border crossings are July and August. The lowest number of crossings took place in the winter months (February, in particular).</p>
 <pre class="r"><code>## Border crossings by month 
 border_crossing_df %&gt;% 
-  group_by(month) %&gt;% 
-  summarize(n = sum(value)) %&gt;% 
+  group_by(month_name) %&gt;% 
+  summarize(total_crossings = sum(value)) %&gt;% 
   knitr::kable()</code></pre>
 <table>
 <thead>
 <tr class="header">
-<th align="right">month</th>
-<th align="right">n</th>
+<th align="left">month_name</th>
+<th align="right">total_crossings</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="right">1</td>
+<td align="left">January</td>
 <td align="right">611107875</td>
 </tr>
 <tr class="even">
-<td align="right">2</td>
+<td align="left">February</td>
 <td align="right">568690871</td>
 </tr>
 <tr class="odd">
-<td align="right">3</td>
+<td align="left">March</td>
 <td align="right">651409308</td>
 </tr>
 <tr class="even">
-<td align="right">4</td>
+<td align="left">April</td>
 <td align="right">628266842</td>
 </tr>
 <tr class="odd">
-<td align="right">5</td>
+<td align="left">May</td>
 <td align="right">658004778</td>
 </tr>
 <tr class="even">
-<td align="right">6</td>
+<td align="left">June</td>
 <td align="right">648545701</td>
 </tr>
 <tr class="odd">
-<td align="right">7</td>
+<td align="left">July</td>
 <td align="right">714405951</td>
 </tr>
 <tr class="even">
-<td align="right">8</td>
+<td align="left">August</td>
 <td align="right">718551827</td>
 </tr>
 <tr class="odd">
-<td align="right">9</td>
+<td align="left">September</td>
 <td align="right">623220080</td>
 </tr>
 <tr class="even">
-<td align="right">10</td>
+<td align="left">October</td>
 <td align="right">631347754</td>
 </tr>
 <tr class="odd">
-<td align="right">11</td>
+<td align="left">November</td>
 <td align="right">612730589</td>
 </tr>
 <tr class="even">
-<td align="right">12</td>
+<td align="left">December</td>
 <td align="right">649952890</td>
 </tr>
 </tbody>
@@ -483,29 +472,30 @@ border_crossing_df %&gt;%
 <p>The barplot below shows the order crossings by month for each of the two borders: Canada and Mexico. From the plot, we see that there is a much larger volume in crossings at the US-Mexico border for every month of the year. Additionally, we can observe that US-Mexico border crossings are relatively stable across the months, whereas for the US-Canada border there is an obvious peak in travel during the summer months. This may be due to summer vacations</p>
 <pre class="r"><code>## Bar plot
 border_crossing_df %&gt;%
-  group_by(month, border) %&gt;% 
-  summarize(n = sum(value)) %&gt;% 
-  ggplot(aes(x = as.factor(month), y = n, fill = border)) + 
+  group_by(month_name, border) %&gt;% 
+  summarize(total_crossings = sum(value)) %&gt;% 
+  ggplot(aes(x = month_name, y = total_crossings, fill = border)) + 
   geom_bar(stat = &quot;identity&quot;, position = &#39;dodge&#39;) + 
   labs(title = &quot;Crossings by Month and Border&quot;,
        x = &quot;Month&quot;, 
-       y = &quot;Number of Crossings&quot;)</code></pre>
+       y = &quot;Number of Crossings&quot;) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))</code></pre>
 <p><img src="crossings_monthly_files/figure-html/unnamed-chunk-3-1.png" width="90%" /></p>
 <p>Below is a plot of 2018 border crossings for the 5 states with the highest number of border crossings. California, Arizona and Texas are on the US-Mexico border, whereas Michigan and New York are on the US-Canada border. Interestingly, we see a jump in border crossings for New York and Michigan during the summer months, which aligns with the trend for US-Canada crossings seen in the previous plot. Travel within the 3 other states on the US-Mexico border is fairly stable over the months as well.</p>
-<p>Lastly, California has notably more border crossings than all 4 other states. Texas has the second highest number, which is also notably more than New York, Michigan and Arizona. These two states may be driving the high number of border crossings in the US-Mexico border compared to the US-Canada border.</p>
+<p>Lastly, California has notably more crossings per port than all 4 other states. Texas has the second highest average, which is also notably more than New York, Michigan and Arizona. These two states may be driving the high number of border crossings in the US-Mexico border compared to the US-Canada border.</p>
 <pre class="r"><code>## Average values over time for top 5 states in 2018
 border_crossing_df %&gt;%
   filter(state %in% c(&quot;Texas&quot;, &quot;California&quot;, &quot;Arizona&quot;, &quot;New York&quot;, &quot;Michigan&quot;), year == 2018) %&gt;% 
-  group_by(state, month, year) %&gt;%  
+  group_by(state, month_name, year) %&gt;%  
   summarize(mean_value = mean(value)) %&gt;%
-  ggplot(aes(x = month , y = mean_value, color = state)) + 
+  ggplot(aes(x = month_name , y = mean_value, color = state, group = state)) + 
   geom_point() + 
   geom_line() + 
   theme(legend.position = &quot;bottom&quot;) + 
-  scale_x_continuous(limits = c(1,12), breaks = c(1:12)) +
+  #scale_x_continuous(limits = c(1,12), breaks = c(1:12)) +
   labs(title = &quot;Average Number of Border Crossings Over Time by State&quot;,
        x = &quot;Month&quot;, 
-       y = &quot;Number of Crossings&quot;)</code></pre>
+       y = &quot;Mean Number of Crossings per Port&quot;)</code></pre>
 <p><img src="crossings_monthly_files/figure-html/unnamed-chunk-4-1.png" width="90%" /></p>
 </div>
 
@@ -520,7 +510,7 @@ border_crossing_df %&gt;%
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();

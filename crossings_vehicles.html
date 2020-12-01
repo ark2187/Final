@@ -26,17 +26,6 @@
 <script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
-<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
-
-<style type="text/css">
-  code{white-space: pre-wrap;}
-  span.smallcaps{font-variant: small-caps;}
-  span.underline{text-decoration: underline;}
-  div.column{display: inline-block; vertical-align: top; width: 50%;}
-  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-  ul.task-list{list-style: none;}
-    </style>
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -466,7 +455,7 @@ vehicles_yearly %&gt;%
   group_by(vehicle, year, border) %&gt;%
   summarize(num = sum(value)) %&gt;%
   ggplot(aes(x = year, y = log(num), 
-             color = as.factor(vehicle), as.factor(vehicle))) +
+             color = as.factor(vehicle), group = as.factor(vehicle))) +
   geom_point(size = 2, alpha = 0.5) +
   geom_line(size = 1.5, alpha = 0.5) +
   facet_grid(~border) +
@@ -483,8 +472,9 @@ vehicles_yearly %&gt;%
 <p>The US-Mexico border has a higher volume of crossings than the US-Canada border. There is also a larger gap between the vehicle and non-vehicle lines for the US-Mexico border, likely showing that there are more pedestrians and people per vehicle that for the US-Canada border.</p>
 <p>The lowest number of crossings at the US-Canada border is in 2009 for vehicles and in 2016 for non-vehicles, whereas it is in 2011 at the US-Mexico border for both types. The trends over the years are different: there is a steady decrease over the years at the US-Mexico border before rising again in 2011, whereas the US-Canada border looks to have three drops in the number of crossings.</p>
 </div>
-<div id="texas" class="section level1">
-<h1>Texas</h1>
+<div id="texas-v-california" class="section level1">
+<h1>Texas v California</h1>
+<p>A previous chart showed California with a higher average crossing than Texas. This interesting, so the number and types of crossings are displayed below. Texas has higher total crossings. This visualization is also designed to explore if the general types of vehicles are the same or if they have different patterns overtime.</p>
 <pre class="r"><code>tx_ca_monthly &lt;-
   border_crossing_df %&gt;%
   filter(state %in% c(&quot;California&quot;, &quot;Texas&quot;)) %&gt;%
@@ -520,6 +510,17 @@ tx_ca_monthly %&gt;%
        y = &quot;Ln Number of Crossings&quot;, 
        color = &quot;Vehicle Type&quot;)</code></pre>
 <p><img src="crossings_vehicles_files/figure-html/unnamed-chunk-6-1.png" width="90%" /></p>
+<p>We see stepwise changes in rail crossings, potentially from the closure of rail lines. We also see high monthly variation in monthly California rail traffic.</p>
+<p>The following visualization is another way of looking at the distribution and frequency of vehicle type over time.</p>
+<pre class="r"><code>tx_ca_monthly %&gt;%
+  ungroup() %&gt;%
+  group_by(state, measure_short, year) %&gt;%
+  summarize(num_crossings = sum(num)) %&gt;%
+  ggplot(aes(x= year, y= num_crossings, fill= measure_short)) +
+  geom_bar(stat = &quot;identity&quot;, position = &quot;stack&quot;, width = 1) +
+  facet_grid(~state)</code></pre>
+<pre><code>## `summarise()` regrouping output by &#39;state&#39;, &#39;measure_short&#39; (override with `.groups` argument)</code></pre>
+<p><img src="crossings_vehicles_files/figure-html/unnamed-chunk-7-1.png" width="90%" /></p>
 </div>
 
 
@@ -533,7 +534,7 @@ tx_ca_monthly %&gt;%
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();
