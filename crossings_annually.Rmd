@@ -43,7 +43,7 @@ The table below shows us that there has been a decline in border crossings since
 ## Border crossings by year
 border_crossing_df %>% 
   group_by(year) %>% 
-  summarize(n = sum(value)) %>% 
+  summarize(total_crossings = sum(value)) %>% 
   knitr::kable()
 
 ```
@@ -55,18 +55,19 @@ Looking at these plots, we can see the clear decline in border crossings over th
 ```{r}
 border_crossing_df %>%
   filter(state %in% c("Texas", "California", "Arizona", "New York", "Michigan")) %>%
-  group_by(state, month, year) %>%  
+  group_by(state, month_name, year) %>%  
   summarize(mean_value = mean(value)) %>%
-  ggplot(aes(x = month , y = mean_value, color = as.factor(year))) + 
+  ggplot(aes(x = month_name , y = mean_value, color = as.factor(year), group = year)) + 
   geom_point() + 
   geom_line() + 
   theme(legend.position = "bottom") + 
   facet_wrap(~state) +
-  scale_x_continuous(limits = c(1,12), breaks = c(1:12)) +
+  #scale_x_continuous(limits = c(1,12), breaks = c(1:12)) +
   labs(title = "Average Number of Border Crossings by Year in New York",
        x = "Month", 
        y = "Number of Crossings", 
-       color = "Year")
+       color = "Year") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
 ```
 
