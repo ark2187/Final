@@ -1,7 +1,7 @@
 ---
 title: "Code for final project"
 date: "11/5/2020"
-output: github_document
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
@@ -40,7 +40,7 @@ border_crossing_df = read_csv(file = "./Border_Crossing_Entry_Data.csv") %>%
          vehicle = if_else(str_detect(measure, "Passengers") |
                              measure == "Pedestrians",
                            "Non-Vehicles", "Vehicles")) %>% 
-  filter(year >= 2000, year < 2019, value != 0)
+  filter(year >= 2000, year < 2019, value != 0, state != "Ohio")
   
 ```
 
