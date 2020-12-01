@@ -17,16 +17,18 @@ library(leaflet)
 ```
 
 ```{r tidied_data, message=FALSE}
-month_df <- tibble(month = 1:12, month_name = month.name)
+month_df <- tibble(month = 1:12, month_name = month.name) %>%
+         mutate(month_name = as.factor(month_name),
+         month_name = fct_reorder(month_name, c("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")))
 
-border_crossing_df <- read_csv(file = "../Border_Crossing_Entry_Data.csv") %>% 
+border_crossing_df <- read_csv(file = "./Border_Crossing_Entry_Data.csv") %>% 
   janitor::clean_names() %>% 
   mutate(date = str_sub(date, end = -13), 
          location = str_replace(location, "POINT ", ""), 
          port_name_state = str_c(port_name, state, sep = "_")) %>% 
   separate(date, into = c("month", "day", "year"), sep = "/", convert = TRUE) %>%
   left_join(month_df, by = "month") %>%
-  select(-day, -month) %>% 
+  select(-day) %>% 
   separate(location, into = c("long", "lat"), sep = " ") %>% 
   mutate(long = str_replace(long, "\\(", ""), 
          lat = str_replace(lat, "\\)", ""), 
@@ -145,32 +147,19 @@ renderPlotly({
 ```{r}
 renderPlotly({
     border_crossing_df %>%
-    group_by(border, month, year, measure) %>%
+    group_by(border, measure, month_name, year) %>%
     summarize(num = sum(value)) %>%
     mutate(type_tf = map(measure, crossings_type_func,
                           input[["crossings_choice"]])) %>%
     filter(type_tf == TRUE,
            border == input[["border_choice"]],
            year == input[["year_choice"]]) %>%
-    plot_ly(x = ~month, y = ~log(num), color = ~measure, 
-            type = "scatter", mode = "lines+markers",
+    plot_ly(x = ~month_name, y = ~log(num), color = ~measure, 
+            group = ~measure, type = "scatter", mode = "line",
             colors = "viridis", alpha = 0.5) %>%
     layout(xaxis = list(title = 'Month'),
            yaxis = list(title = 'Ln Number of Crossings',
                         type = "log"))
 })
-
-# border_crossing_df %>%
-#     group_by(border, month, year, measure) %>%
-#     summarize(num = sum(value)) %>%
-#     filter(measure %in% c("Buses", "Pedestrians"),
-#            border == "US-Canada Border",
-#            year == 2018) %>%
-#     plot_ly(x = ~as.factor(month), y = ~log(num), color = ~measure, 
-#             type = "scatter", mode = "lines+markers",
-#             colors = "viridis", alpha = 0.5) %>%
-#     layout(xaxis = list(title = 'Month'),
-#            yaxis = list(title = 'Ln Number of Crossings',
-#                         type = "log"))
 ```
 

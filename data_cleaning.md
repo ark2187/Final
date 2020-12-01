@@ -23,7 +23,9 @@ Reading in the border crossing data:
 <!-- end list -->
 
 ``` r
-month_df <- tibble(month = 1:12, month_name = month.name)
+month_df <- tibble(month = 1:12, month_name = month.name)%>%
+         mutate(month_name = as.factor(month_name),
+         month_name = fct_reorder(month_name, c("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")))
 
 border_crossing_df = read_csv(file = "./Border_Crossing_Entry_Data.csv") %>% 
   janitor::clean_names() %>% 

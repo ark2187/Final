@@ -15,7 +15,7 @@
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/lumen.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -106,33 +106,33 @@ summary {
 <style type="text/css">
 /* padding for bootstrap navbar */
 body {
-  padding-top: 54px;
+  padding-top: 45px;
   padding-bottom: 40px;
 }
 /* offset scroll position for anchor links (for fixed navbar)  */
 .section h1 {
-  padding-top: 59px;
-  margin-top: -59px;
+  padding-top: 50px;
+  margin-top: -50px;
 }
 .section h2 {
-  padding-top: 59px;
-  margin-top: -59px;
+  padding-top: 50px;
+  margin-top: -50px;
 }
 .section h3 {
-  padding-top: 59px;
-  margin-top: -59px;
+  padding-top: 50px;
+  margin-top: -50px;
 }
 .section h4 {
-  padding-top: 59px;
-  margin-top: -59px;
+  padding-top: 50px;
+  margin-top: -50px;
 }
 .section h5 {
-  padding-top: 59px;
-  margin-top: -59px;
+  padding-top: 50px;
+  margin-top: -50px;
 }
 .section h6 {
-  padding-top: 59px;
-  margin-top: -59px;
+  padding-top: 50px;
+  margin-top: -50px;
 }
 .dropdown-submenu {
   position: relative;
@@ -371,7 +371,7 @@ div.tocify {
       <a href="crossings_people.html">Crossings of People</a>
     </li>
     <li>
-      <a href="crossings_vehicles.html">Crossings of Vehicles, Personal, Commercial</a>
+      <a href="crossings_vehicles.html">Crossings of Vehicles</a>
     </li>
   </ul>
 </li>
@@ -409,13 +409,13 @@ div.tocify {
 <pre class="r"><code>## Border crossings by year
 border_crossing_df %&gt;% 
   group_by(year) %&gt;% 
-  summarize(n = sum(value)) %&gt;% 
+  summarize(total_crossings = sum(value)) %&gt;% 
   knitr::kable()</code></pre>
 <table>
 <thead>
 <tr class="header">
 <th align="right">year</th>
-<th align="right">n</th>
+<th align="right">total_crossings</th>
 </tr>
 </thead>
 <tbody>
@@ -501,18 +501,19 @@ border_crossing_df %&gt;%
 <p>Looking at these plots, we can see the clear decline in border crossings over the years in Michigan and New York. In Arizona and Texas, there is also an apparent decline, however, the volume in 2016-2018 shows that there was an upturn in these years compared to years 2012-2016. Lastly, in California, 2018 appears to be the year with the highest volume, and no clear declines annually.</p>
 <pre class="r"><code>border_crossing_df %&gt;%
   filter(state %in% c(&quot;Texas&quot;, &quot;California&quot;, &quot;Arizona&quot;, &quot;New York&quot;, &quot;Michigan&quot;)) %&gt;%
-  group_by(state, month, year) %&gt;%  
+  group_by(state, month_name, year) %&gt;%  
   summarize(mean_value = mean(value)) %&gt;%
-  ggplot(aes(x = month , y = mean_value, color = as.factor(year))) + 
+  ggplot(aes(x = month_name , y = mean_value, color = as.factor(year), group = year)) + 
   geom_point() + 
   geom_line() + 
   theme(legend.position = &quot;bottom&quot;) + 
   facet_wrap(~state) +
-  scale_x_continuous(limits = c(1,12), breaks = c(1:12)) +
+  #scale_x_continuous(limits = c(1,12), breaks = c(1:12)) +
   labs(title = &quot;Average Number of Border Crossings by Year in New York&quot;,
        x = &quot;Month&quot;, 
        y = &quot;Number of Crossings&quot;, 
-       color = &quot;Year&quot;)</code></pre>
+       color = &quot;Year&quot;) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))</code></pre>
 <p><img src="crossings_annually_files/figure-html/unnamed-chunk-3-1.png" width="90%" /></p>
 </div>
 
