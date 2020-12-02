@@ -4,6 +4,7 @@ output:
   html_document:
     toc: true
     toc_float: true
+    theme: yeti
     code_folding: hide
 ---
 
@@ -98,7 +99,7 @@ border_crossing_df %>%
   group_by(vehicle, year, border) %>%
   summarize(num = sum(value)) %>%
   ggplot(aes(x = year, y = log(num), 
-             color = as.factor(vehicle), group = border)) +
+             color = as.factor(vehicle), group = as.factor(vehicle))) +
   geom_point(size = 2, alpha = 0.5) +
   geom_line(size = 1.5, alpha = 0.5) +
   facet_grid(~border) +
@@ -113,53 +114,65 @@ border_crossing_df %>%
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
+The US-Mexico border has a higher volume of crossings than the US-Canada border. There is also a larger gap between the vehicle and non-vehicle lines for the US-Mexico border, likely showing that there are more pedestrians and people per vehicle that for the US-Canada border. 
+
+The lowest number of crossings at the US-Canada border is in 2009 for vehicles and in 2016 for non-vehicles, whereas it is in 2011 at the US-Mexico border for both types. The trends over the years are different: there is a steady decrease over the years at the US-Mexico border before rising again in 2011, whereas the US-Canada border looks to have three drops in the number of crossings.
+
+
+# Texas v California
+
+A previous chart showed California with a higher average crossing than Texas. This interesting, so the number and types of crossings are displayed below. Texas has higher total crossings. This visualization is also designed to explore if the general types of vehicles are the same or if they have different patterns overtime. 
 
 ```{r message=FALSE}
-mexico_yearly <- 
+tx_ca_monthly <-
   border_crossing_df %>%
-  filter(border == "US-Mexico Border") %>%
-  group_by(vehicle, year) %>%
-  summarize(num = sum(value)) %>%
-  ggplot(aes(x = year, y = log(num), color = as.factor(vehicle))) +
-  geom_point(size = 2, alpha = 0.5) +
-  geom_line(size = 1.5, alpha = 0.5) +
-  theme(legend.position = "bottom") + 
-  scale_x_continuous(limits = c(2000,2018), breaks = c(2000:2018)) +
+  filter(state %in% c("California", "Texas")) %>%
+  mutate(
+    measure_short= case_when(
+      measure == "Personal Vehicle Passengers" ~ "Personal Vehicles",
+      measure == "Personal Vehicles" ~ "Personal Vehicles",
+      measure == "Rail Containers Empty" ~ "Rail Containers",
+      measure == "Rail Containers Full" ~ "Rail Containers",
+      measure == "Bus Passengers" ~ "Buses",
+      measure == "Buses" ~ "Buses",
+      measure == "Truck Containers Empty" ~ "Trucks",
+      measure == "Truck Containers Full" ~ "Trucks",
+      measure == "Trucks" ~ "Trucks",
+      measure == "Train Passengers" ~ "Trains",
+      measure == "Trains" ~ "Trains",
+      measure == "Pedestrians" ~ "Pedestrians",
+    ),
+    measure = as.factor(measure_short),
+    state = as.factor(state)) %>%
+  group_by(state, measure_short, year, month) %>%
+  summarize(num = sum(value))
+
+tx_ca_monthly %>%
+  ungroup() %>%
+  ggplot(aes(x = year, y = log(num), color = measure_short)) +
+  geom_point(alpha = 0.5, position = position_jitter(w = 0.2, h = 0)) +
+  facet_grid(~state) +
+  theme(legend.position = "bottom") +
   scale_y_continuous(trans = scales::log_trans(base = exp(1))) +
-  labs(title = "Yearly Trend of Vehicle and Non-Vehicle US-Mexico Border Crossings from 2000 to 2018",
+  labs(title = "Yearly Trends of Vehicle Border Crossings from 2000 to 2018 by Vehicle Types",
        x = "Year", 
-       y = "Ln Number of Crossings",
-       color = "Crossing Type",
-       caption = "Number of crossings was log-transformed. Non-vehicle types include pedestrian and vehicle passenger counts.")+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+       y = "Ln Number of Crossings", 
+       color = "Vehicle Type")
 
-canada_yearly <- 
-  border_crossing_df %>%
-  filter(border == "US-Canada Border") %>%
-  group_by(vehicle, year) %>%
-  summarize(num = sum(value)) %>%
-  ggplot(aes(x = year, y = log(num), color = as.factor(vehicle))) +
-  geom_point(size = 2, alpha = 0.5) +
-  geom_line(size = 1.5, alpha = 0.5) +
-  theme(legend.position = "none") +
-  scale_x_continuous(limits = c(2000,2018), breaks = c(2000:2018)) +
-  scale_y_continuous(trans = scales::log_trans(base = exp(1))) +
-  labs(title = "Yearly Trend of Vehicle and Non-Vehicle US-Canada Border Crossings from 2000 to 2018",
-       x = "Year", 
-       y = "Ln Number of Crossings") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-canada_yearly / mexico_yearly
 ```
-
-
-# Personal Vehicles
-
-```{r eval=FALSE}
-personal_vehicle_df <-
-  border_crossing_df
-```
-
-
-
  
+We see stepwise changes in rail crossings, potentially from the closure of rail lines. We also see high monthly variation in monthly California rail traffic. 
+
+
+The following visualization is another way of looking at the distribution and frequency of vehicle type over time. 
+```{r message=FALSE}
+tx_ca_monthly %>%
+  ungroup() %>%
+  group_by(state, measure_short, year) %>%
+  summarize(num_crossings = sum(num)) %>%
+  ggplot(aes(x= year, y= num_crossings, fill= measure_short)) +
+  geom_bar(stat = "identity", position = "stack", width = 1) +
+  facet_grid(~state)
+
+```

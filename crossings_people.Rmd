@@ -4,14 +4,13 @@ output:
   html_document:
     toc: true
     toc_float: true
+    theme: yeti
+    code_folding: hide
 ---
 
 # Graphs about passengers
 
-Methods of passenger travel
-
-Number of passengers over time
-
+Number of Passengers at each border, by travel types specified per person
 
 ```{r include=FALSE}
 library(tidyverse)
@@ -39,16 +38,15 @@ scale_fill_discrete = scale_fill_viridis_d
 border_crossing_df = readRDS(file = "border_crossing_df_clean.rds")
 ```
 
-```{r}
-
-people_yearly <-
+```{r message=FALSE}
+people_yearly_1 <-
 border_crossing_df %>%
-  filter(measure %in% c("Personal Vehicle Passengers","Pedestrians","Bus Passengers", "Train Passengers")) %>%
+  filter(measure %in% c("Bus Passengers", "Train Passengers")) %>%
   group_by(border, measure, year) %>%
   summarize(num = sum(value))
 
 
-people_yearly %>%
+people_yearly_1 %>%
     mutate(measure = as.factor(measure), border = as.factor(border)) %>%
   ungroup() %>%
   ggplot(aes(x = year, y = num , group = measure , color = measure)) +
@@ -60,4 +58,28 @@ people_yearly %>%
        x = "year", 
        y = "Number of Crossings", 
        color = "measure")
+```
+
+```{r message=FALSE}
+people_yearly_2 <-
+border_crossing_df %>%
+  filter(measure %in% c("Personal Vehicle Passengers","Pedestrians")) %>%
+  group_by(border, measure, year) %>%
+  summarize(num = sum(value))
+
+
+people_yearly_2 %>%
+    mutate(measure = as.factor(measure), border = as.factor(border)) %>%
+  ungroup() %>%
+  ggplot(aes(x = year, y = num , group = measure , color = measure)) +
+  geom_point() +
+  geom_line() +
+  facet_grid(~border) +
+  theme(legend.position = "bottom") + 
+  labs(title = "Yearly Trends of People Crossings from 2000 to 2018",
+       x = "year", 
+       y = "Number of Crossings", 
+       color = "measure")
+
+
 ```

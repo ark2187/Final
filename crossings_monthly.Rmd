@@ -39,50 +39,70 @@ border_crossing_df = readRDS(file = "border_crossing_df_clean.rds")
 
 In the table below, we see that the months with the highest number of border crossings are July and August. The lowest number of crossings took place in the winter months (February, in particular). 
 
-```{r}
+```{r summary_table}
 ## Border crossings by month 
 border_crossing_df %>% 
-  group_by(month) %>% 
-  summarize(n = sum(value)) %>% 
-  knitr::kable()
+  group_by(month_name) %>% 
+  summarize(total_crossings = sum(value)) %>% 
+  knitr::kable(col.names = c("Month", "Total Border Crossings"))
 ```
 
-The barplot below shows the order crossings by month for each of the two borders: Canada and Mexico. From the plot, we see that there is a much larger volume in crossings at the US-Mexico border for every month of the year. Additionally, we can observe that US-Mexico border crossings are relatively stable across the months, whereas for the US-Canada border there is an obvious peak in travel during the summer months. This may be due to summer vacations
+The barplot below shows the border crossings by month for each of the two borders: US-Canada and US-Mexico. From the plot, we see that there is a much larger volume in crossings at the US-Mexico border for every month of the year. Additionally, we can observe that US-Mexico border crossings are relatively stable across the months, whereas for the US-Canada border there is an obvious peak in travel during the summer months. This can potentially be due to a peak in summer vacations
 
 
-```{r}
+```{r border_barplot}
 ## Bar plot
 border_crossing_df %>%
-  group_by(month, border) %>% 
-  summarize(n = sum(value)) %>% 
-  ggplot(aes(x = as.factor(month), y = n, fill = border)) + 
+  group_by(month_name, border) %>% 
+  summarize(total_crossings = sum(value)) %>% 
+  ggplot(aes(x = month_name, y = total_crossings, fill = border)) + 
   geom_bar(stat = "identity", position = 'dodge') + 
   labs(title = "Crossings by Month and Border",
        x = "Month", 
-       y = "Number of Crossings")
+       y = "Total Number of Crossings") +
+  scale_y_continuous(labels = scales::comma) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
 ```
 
 
-Below is a plot of 2018 border crossings for the 5 states with the highest number of border crossings. California, Arizona and Texas are on the US-Mexico border, whereas Michigan and New York are on the US-Canada border. Interestingly, we see a jump in border crossings for New York and Michigan during the summer months, which aligns with the trend for US-Canada crossings seen in the previous plot. Travel within the 3 other states on the US-Mexico border is fairly stable over the months as well. 
+Below we see 2 plots for 2018 border crossings for the 5 states with the highest number of border crossings. California, Arizona and Texas are on the US-Mexico border, whereas Michigan and New York are on the US-Canada border. There are a few interesting things to note here: 
 
-Lastly, California has notably more border crossings than all 4 other states. Texas has the second highest number, which is also notably more than New York, Michigan and Arizona. These two states may be driving the high number of border crossings in the US-Mexico border compared to the US-Canada border. 
+*   In both plots, we see a jump in border crossings for New York and Michigan during the summer months, which aligns with the trend for US-Canada crossings seen in the previous plot. Travel within the 3 other states on the US-Mexico border is fairly stable over the months. 
 
-```{r}
-## Average values over time for top 5 states in 2018
+*   In the plot conveying the average number of border crossings, it appears that California has a great deal more crossings than the other states. On the contrary, in the plot conveying the total number of border crossings, we see that Texas has the most crossings. This leads us to conclude that California likely has fewer ports than Texas, thus, has a higher average crossing rate across all ports but a lower total crossing. 
+
+*   Lastly, in both plots, California and Texas have a higher number of crossings than Michigan, New York and Arizona. These two states are on the US-Mexico border, and thus may be driving the  large increased number of border crossings for this border compared to the US-Canada border. 
+
+```{r avg_plot}
 border_crossing_df %>%
   filter(state %in% c("Texas", "California", "Arizona", "New York", "Michigan"), year == 2018) %>% 
-  group_by(state, month, year) %>%  
+  group_by(state, month_name, year) %>%  
   summarize(mean_value = mean(value)) %>%
-  ggplot(aes(x = month , y = mean_value, color = state)) + 
+  ggplot(aes(x = month_name , y = mean_value, color = state, group = state)) + 
   geom_point() + 
   geom_line() + 
   theme(legend.position = "bottom") + 
-  scale_x_continuous(limits = c(1,12), breaks = c(1:12)) +
   labs(title = "Average Number of Border Crossings Over Time by State",
        x = "Month", 
-       y = "Number of Crossings")
+       y = "Mean Number of Crossings for All Ports")
 
 ```
 
+```{r total_plot}
+## Average values over time for top 5 states in 2018
+border_crossing_df %>%
+  filter(state %in% c("Texas", "California", "Arizona", "New York", "Michigan"), year == 2018) %>% 
+  group_by(state, month_name, year) %>%  
+  summarize(total_value = sum(value)) %>%
+  ggplot(aes(x = month_name , y = total_value, color = state, group = state)) + 
+  geom_point() + 
+  geom_line() + 
+  theme(legend.position = "bottom") + 
+  scale_y_continuous(labels = scales::comma) +
+  labs(title = "Total Number of Border Crossings Over Time by State",
+       x = "Month", 
+       y = "Toal Number of Crossings for All Ports")
+```
+ 
  
