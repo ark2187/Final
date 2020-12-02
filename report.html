@@ -407,7 +407,7 @@ div.tocify {
 <h2>Motivations</h2>
 <p>Immigration has been a hotly contested issue during Trump’s presidency. Marking his words of building a “big, beautiful wall” in 2016, President Donald Trump got the green light from The Supreme Court in 2019 and $2.5 billion from the Pentagon’s budget to building up the U.S.-Mexico border.</p>
 <p>Ironically, despite the promise of his campaign to stop illegal immigration and build a strong bolder, the Trump administration faced a great challenge since the number of apprehensions significantly soar. For example, in August 2018, one-month total apprehensions was the highest on record and an 80 percent increase from July 2018. This trend is quite contrasting to the border crossing situation under the Obama administration. From 2008 to 2016, the yearly apprehensions on the Southwest border declined by 35 percent.</p>
-<p>Although the data we found on border crossings on Kaggle are recorded, legal, and do not run into 2020, we were interested in looking at border crossing trends because of this issue. Understanding the change in legal border crossing is crucial when considering the United States and Mexico’s mutually dependent relationship in many aspects: including economy, separated immigrants’ family issues, etc. Indeed, Mexico has remained the United States’ second-largest export market since 1995, with exports totaling $242 billion in 2017.This analysis will help us understand and show how the border crossings play into life (e.g. movement of goods, commuting, holiday travel).</p>
+<p>Although the data we found on border crossings on Kaggle are recorded, legal, and do not run into 2020, we were interested in looking at border crossing trends because of this issue. Understanding the change in legal border crossing is crucial when considering the United States and Mexico’s mutually dependent relationship in many aspects: including economy, separated immigrants’ family issues, etc. Indeed, Mexico has remained the United States’ second-largest export market since 1995, with exports totaling $242 billion in 2017. This analysis will help us understand and show how the border crossings play into life (e.g., movement of goods, commuting, holiday travel).</p>
 </div>
 <div id="related-work" class="section level2">
 <h2>Related Work</h2>
@@ -488,8 +488,8 @@ border_crossing_df = read_csv(file = &quot;./Border_Crossing_Entry_Data.csv&quot
 </div>
 <div id="crossings-annually" class="section level4">
 <h4><em>Crossings Annually</em></h4>
-<p>Follow this link to <a href="crossings_annually.html">Annual Crossing Data</a>.</p>
 <p><strong>Question: Has the volume of border crossings changed from 2000-2018?</strong></p>
+<p>Follow this link to <a href="crossings_annually.html">Annual Crossing Data</a>.</p>
 <p>The analysis in this section contains a table with the total number of border crossings aggregated across all ports for each year. From this, we can see that there has been a decline in border crossings since 2000. The decline was steady decline until 2012 in which a slight upwards turn took place. This upturn took place and began to rise slowly until 2018, although the values never grew larger than they were in 2008.</p>
 <p>Additionally, a graph of average number of border crossings by year for the top 5 states with the largest total number of border crossings (Arizona, California, Michigan, New York and Texas) was created. From this, we can see that for New York and Michigan, there is a clear decline in the average number of border crossings across all ports over the years, with the lowest averages being in 2018. These results contrast to California, in which 2018 saw the highest average of border crossings across all ports. This may lead us to conclude that border crossings on the US-Canada border decreased over time, but maybe the opposite is to be seen for the US-Mexico border.</p>
 </div>
@@ -513,14 +513,14 @@ border_crossing_df = read_csv(file = &quot;./Border_Crossing_Entry_Data.csv&quot
 <div id="description-of-approaches-and-alternate-approaches" class="section level2">
 <h2>Description of Approaches and Alternate Approaches</h2>
 <p>This project was inspired by recent US immigration policy and the national discourse about illegal immigration and enforcement. However, the available data only captures legal border crossings. In addition, the dataset does not include information on why a crossing is made, e.g. for immigration, vacation, or commerce. Nor is the nationality of the travel known.</p>
-<p>We adjusted our approach accordingly by coding a “vehicle” and “non-vehicle” variable to understand the movement of people and goods as separately as possible.</p>
-<p>We also knew that we wanted to visualize the crossings on a map. However, the U.S borders are long, especially when including Alaska, making it difficult to see all crossing info at once.</p>
-<p>Using a shiny leaflet map solved this issue by allowing the user to select the US-Canada border or the US-Mexico border. The user can also select the type of crossing that is of interest to them.</p>
-<p>Users can also see the a boxplot of the monthly log number of crossings for each year and border to see state variations. Finally, a line graph of monthly crossing by vehicle type is included to show seasonality and vehicle trends.</p>
+<p>We adjusted our approach accordingly by coding a “vehicle” and “non-vehicle” variable to understand the movement of people and goods as separately as possible. “Non-vehicle” crossings include passengers and pedestrians.</p>
+<p><strong>Interactive Approach Using Shiny</strong></p>
+<p>We also knew that we wanted to visualize the crossings on an interactive map because the U.S borders are long, especially when including Alaska, making it difficult to see all crossing info at once. Using a Shiny Leaflet map solved this issue by allowing the user to select the US-Canada or US-Mexico border, the year of data, and type of crossing to look at annual trends.</p>
+<p>Users can also see the a boxplot of the monthly LN number of crossings for each year and border to see state variations, due to the log-normal distribution of crossings. Finally, a line graph of LN crossings versus month by vehicle type is included to examine seasonality of vehicle trends.</p>
 </div>
 <div id="discussion" class="section level2">
 <h2>Discussion</h2>
-<p>Lastly, in looking at the monthly and yearly trends of border crossings for vehicles and non-vehicles, we saw that the US-Mexico border has a larger volume of crossings and that there is some seasonality in US-Canada border crossings for personal vehicles and buses. We thought we would see seasonality at the US-Canada border during the summer months for summer vacation. We also expected to see a drop in border crossings overall during President Obama’s first term around 2008-2012 due to nation-wide immigration issues. We also note that there is less seasonality in all other vehicles and at the US-Mexico border because commercial travel is not influenced by holiday/vacation seasons.</p>
+<p>In looking at the monthly and yearly trends of border crossings for vehicles and non-vehicles, we saw that the US-Mexico border has a larger volume of crossings and that there is some seasonality in US-Canada border crossings for personal vehicles and buses. We thought we would see seasonality at the US-Canada border during the summer months for summer vacation. We also expected to see a drop in border crossings overall during President Obama’s first term around 2008-2012 due to nation-wide immigration issues. We also note that there is less seasonality in all other vehicles and at the US-Mexico border because commercial travel is not influenced by holiday/vacation seasons.</p>
 </div>
 
 

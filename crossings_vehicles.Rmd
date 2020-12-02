@@ -4,6 +4,7 @@ output:
   html_document:
     toc: true
     toc_float: true
+    theme: yeti
     code_folding: hide
 ---
 
@@ -165,7 +166,7 @@ We see stepwise changes in rail crossings, potentially from the closure of rail 
 
 
 The following visualization is another way of looking at the distribution and frequency of vehicle type over time. 
-```{r}
+```{r message=FALSE}
 tx_ca_monthly %>%
   ungroup() %>%
   group_by(state, measure_short, year) %>%
