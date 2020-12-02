@@ -5,6 +5,7 @@ output:
     toc: true
     toc_float: true
     theme: yeti
+    code_folding: hide
 ---
 
 ## Motivations
@@ -26,48 +27,108 @@ The following resources are a sample of what inspired this project.
 
 ## Data
 
-```{r include=FALSE}
-library(tidyverse)
-border_crossing_df = readRDS(file = "border_crossing_df_clean.rds")
-```
-
-
-### Source
+### *Source*
 
 Primary data source from Kaggle: [Border Crossing Entry Data](https://www.kaggle.com/akhilv11/border-crossing-entry-data) 
 
-### Cleaning 
+### *Cleaning* 
+
+
+```{r clean_data, warning=FALSE, message=FALSE}
+month_df <- tibble(month = 1:12, month_name = month.name) %>%
+         mutate(month_name = as.factor(month_name),
+         month_name = ordered(month_name, levels =  c("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"))) %>%
+  arrange(month_name)
+
+border_crossing_df = read_csv(file = "./Border_Crossing_Entry_Data.csv") %>% 
+  janitor::clean_names() %>% 
+  mutate(date = str_sub(date, end = -13), 
+         location = str_replace(location, "POINT ", ""), 
+         port_name_state = str_c(port_name, state, sep = "_")) %>% 
+  separate(date, into = c("month", "day", "year"), sep = "/", convert = TRUE) %>% 
+    left_join(month_df, by = "month") %>%
+  select(-day, -port_name) %>% 
+  separate(location, into = c("long", "lat"), sep = " ") %>% 
+  mutate(long = str_replace(long, "\\(", ""), 
+         lat = str_replace(lat, "\\)", ""), 
+         long = as.numeric(long),
+         lat =  as.numeric(lat), 
+         vehicle = if_else(str_detect(measure, "Passengers") |
+                             measure == "Pedestrians",
+                           "Non-Vehicles", "Vehicles")) %>% 
+  filter(year >= 2000, year < 2019, value != 0, state != "Ohio")
+  
+```
+
+
+```{r save_cleaned_data, include = FALSE}
+saveRDS(border_crossing_df, file = "border_crossing_df_clean.rds")
+
+#save one into dashboard folder as well
+saveRDS(border_crossing_df, file = "dashboard/border_crossing_df_clean.rds")
+
+```
+
+
+After choosing the database, years were limited from 2000-2018, as the information for border crossings in 2019 was only available until March.  Additionally, years prior to 2000 were removed in order to scale the database to a manageable size. Values for Ohio were also removed as observations for this state only began in 2018.    
+
+Information regarding day of the month was removed because the count of all border crossings was reported on the first day of every month of each year. Additionally,all times of the reports were 12am, so time information was removed as well.      
+
+Some ports in different states had the same name (ex: Eastport), thus, a variable `port_name_state` was created in order to make sure each port name was unique. A variable called `vehicle` was also created in order to condense down the wide variety of `measure` entries that were possible.  
+
+Many rows had a `value` of 0 , ie. there were no border crossings for that specific `measure` during that `month` and `year`. These entries were removed as we were only interested in times when border crossings took place.    
+
 
 #### *Variables of Interest*
 
 **Outcome**
-`value`: A count of the number of crossings for each `measure` type at each `port_name_state` in each `month` of each `year`
+`value`: A count of the number of crossings for each `measure` type at each `port_name_state` in each `month` of each `year`  
 
 **Predictors**
 
-`state`: The state in which the border was located  
-`port_code`: The code for the port in which the border entry took place  
-`border`: Either the US-Canada or the US-Mexico border  
-`month`: Month 1-12 in which the crossing took place  
-`month_name`: Month name (Jan-Dec) in which the crossing took place  
-`year`: Year from 2000 to 2018 in which the crossing took place  
-`measure`: The type of vehicle or non-vehicle utilized in the border crossing. Potential entries include `r border_crossing_df %>% pull(measure) %>% unique()`  
-`long`: Longitude of the port of the crossing
-`lat`: Latitude of the port of the crossing
-`port_name_state`: The port name and state for which the crossing took place. Some ports had the same name so this variable was created to append `state` as well.
-`vehicle`: 
+`state`: The state in which the border is located      
+`port_code`: The code for the port in which the border entry took place    
+`border`: Either the US-Canada or the US-Mexico border    
+`month`: Month 1-12 in which the crossing took place    
+`month_name`: Month name (Jan-Dec) in which the crossing took place    
+`year`: Year from 2000 to 2018 in which the crossing took place    
+`measure`: The type of vehicle or non-vehicle utilized in the border crossing. Potential entries include: `r border_crossing_df %>% pull(measure) %>% unique()`    
+`long`: Longitude of the port of the crossing  
+`lat`: Latitude of the port of the crossing  
+`port_name_state`: The port name and state for which the crossing took place. Some ports had the same name so this variable was created to append `state` as well    
+`vehicle`: Entry is "non-vehicle" for pedestrians and passengers (on either buses, personal vehicles, or trains), and is "vehicle" for all other `measure` values    
 
 ## Exploratory Data Analysis
 
 #### _Crossings Monthly_
 
+**Question: What are the seasonal trends in border crossings?**
+
+Follow this link to [Monthly Crossing Data](crossings_monthly.html).
+
+Graphs in this section visualize border crossings across the months of the year. One visualize produced analyzes trends in total border crossings for both the US-Canada and the US-Mexico border. From this, we were able to see that there is a seasonal variation in border crossings from the US-Canada border, with a jump is crossings during the summer months. However, the US-Mexico border had a stable volume of crossings throughout the months for the years 2000-2018.    
+
+Additionally, border crossings for the top 5 states with the largest total number of border crossings (Arizona, California, Michigan, New York and Texas) were analyzed for 2018. Both the average border crossings across all ports and the total border crossings across all ports for month were evaluated. From this, we found that California had the largest average number of border crossings across all ports, however, Texas had the largest total border crossings by month. This leads us to conclude that Texas has more ports than California, thus the average crossings per port are lower.   
+
+Lastly, from these plots we were able to deduce that New York and Michigan (both on the US-Canada border) had increases in both their total and average crossings by month during the summer months. This trend was not observed in Arizona, California, or Texas, thus supporting the findings that the US-Canada border has an increase in crossings during the summer compared to the stable border crossings on the US-Mexico border.  
+
+
 #### _Crossings Annually_
+
+Follow this link to [Annual Crossing Data](crossings_annually.html).
+
+**Question: Has the volume of border crossings changed from 2000-2018?**
+
+The analysis in this section contains a table with the total number of border crossings aggregated across all ports for each year. From this, we can see that there has been a decline in border crossings since 2000. The decline was steady decline until 2012 in which a slight upwards turn took place. This upturn took place and began to rise slowly until 2018, although the values never grew larger than they were in 2008.  
+
+Additionally, a graph of average number of border crossings by year for the top 5 states with the largest total number of border crossings (Arizona, California, Michigan, New York and Texas) was created. From this, we can see that for New York and Michigan, there is a clear decline in the average number of border crossings across all ports over the years, with the lowest averages being in 2018. These results contrast to California, in which 2018 saw the highest average of border crossings across all ports. This may lead us to conclude that border crossings on the US-Canada border decreased over time, but maybe the opposite is to be seen for the US-Mexico border.   
+
 
 #### _Crossings of People_
 
 #### _Crossings of Vehicles_
 
-**Question: Are there any seasonal trends in border crossings? What are the general trends for vehicle compared to non-vehicle crossings, by month and year?**
+**Question: What are the general trends for vehicle compared to non-vehicle crossings, by month and year?**
 
 Follow this link to [Crossings of Vehicles](crossings_vehicles.html).
 

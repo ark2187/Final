@@ -23,19 +23,9 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
-<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
-
-<style type="text/css">
-  code{white-space: pre-wrap;}
-  span.smallcaps{font-variant: small-caps;}
-  span.underline{text-decoration: underline;}
-  div.column{display: inline-block; vertical-align: top; width: 50%;}
-  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-  ul.task-list{list-style: none;}
-    </style>
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -259,6 +249,9 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
 
 
 
@@ -395,6 +388,14 @@ div.tocify {
 
 <div class="fluid-row" id="header">
 
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
 
 
 <h1 class="title toc-ignore">Border Crossings Report</h1>
@@ -424,23 +425,52 @@ div.tocify {
 <div id="data" class="section level2">
 <h2>Data</h2>
 <div id="source" class="section level3">
-<h3>Source</h3>
+<h3><em>Source</em></h3>
 <p>Primary data source from Kaggle: <a href="https://www.kaggle.com/akhilv11/border-crossing-entry-data">Border Crossing Entry Data</a></p>
 </div>
 <div id="cleaning" class="section level3">
-<h3>Cleaning</h3>
+<h3><em>Cleaning</em></h3>
+<pre class="r"><code>month_df &lt;- tibble(month = 1:12, month_name = month.name) %&gt;%
+         mutate(month_name = as.factor(month_name),
+         month_name = ordered(month_name, levels =  c(&quot;January&quot;, &quot;February&quot;, &quot;March&quot;, &quot;April&quot;, &quot;May&quot;, &quot;June&quot;, &quot;July&quot;, &quot;August&quot;, &quot;September&quot;, &quot;October&quot;, &quot;November&quot;, &quot;December&quot;))) %&gt;%
+  arrange(month_name)
+
+border_crossing_df = read_csv(file = &quot;./Border_Crossing_Entry_Data.csv&quot;) %&gt;% 
+  janitor::clean_names() %&gt;% 
+  mutate(date = str_sub(date, end = -13), 
+         location = str_replace(location, &quot;POINT &quot;, &quot;&quot;), 
+         port_name_state = str_c(port_name, state, sep = &quot;_&quot;)) %&gt;% 
+  separate(date, into = c(&quot;month&quot;, &quot;day&quot;, &quot;year&quot;), sep = &quot;/&quot;, convert = TRUE) %&gt;% 
+    left_join(month_df, by = &quot;month&quot;) %&gt;%
+  select(-day, -port_name) %&gt;% 
+  separate(location, into = c(&quot;long&quot;, &quot;lat&quot;), sep = &quot; &quot;) %&gt;% 
+  mutate(long = str_replace(long, &quot;\\(&quot;, &quot;&quot;), 
+         lat = str_replace(lat, &quot;\\)&quot;, &quot;&quot;), 
+         long = as.numeric(long),
+         lat =  as.numeric(lat), 
+         vehicle = if_else(str_detect(measure, &quot;Passengers&quot;) |
+                             measure == &quot;Pedestrians&quot;,
+                           &quot;Non-Vehicles&quot;, &quot;Vehicles&quot;)) %&gt;% 
+  filter(year &gt;= 2000, year &lt; 2019, value != 0, state != &quot;Ohio&quot;)</code></pre>
+<p>After choosing the database, years were limited from 2000-2018, as the information for border crossings in 2019 was only available until March. Additionally, years prior to 2000 were removed in order to scale the database to a manageable size. Values for Ohio were also removed as observations for this state only began in 2018.</p>
+<p>Information regarding day of the month was removed because the count of all border crossings was reported on the first day of every month of each year. Additionally,all times of the reports were 12am, so time information was removed as well.</p>
+<p>Some ports in different states had the same name (ex: Eastport), thus, a variable <code>port_name_state</code> was created in order to make sure each port name was unique. A variable called <code>vehicle</code> was also created in order to condense down the wide variety of <code>measure</code> entries that were possible.</p>
+<p>Many rows had a <code>value</code> of 0 , ie. there were no border crossings for that specific <code>measure</code> during that <code>month</code> and <code>year</code>. These entries were removed as we were only interested in times when border crossings took place.</p>
 <div id="variables-of-interest" class="section level4">
 <h4><em>Variables of Interest</em></h4>
 <p><strong>Outcome</strong> <code>value</code>: A count of the number of crossings for each <code>measure</code> type at each <code>port_name_state</code> in each <code>month</code> of each <code>year</code></p>
 <p><strong>Predictors</strong></p>
-<p><code>state</code>: The state in which the border was located<br />
+<p><code>state</code>: The state in which the border is located<br />
 <code>port_code</code>: The code for the port in which the border entry took place<br />
 <code>border</code>: Either the US-Canada or the US-Mexico border<br />
 <code>month</code>: Month 1-12 in which the crossing took place<br />
 <code>month_name</code>: Month name (Jan-Dec) in which the crossing took place<br />
 <code>year</code>: Year from 2000 to 2018 in which the crossing took place<br />
-<code>measure</code>: The type of vehicle or non-vehicle utilized in the border crossing. Potential entries include Trucks, Buses, Bus Passengers, Personal Vehicle Passengers, Truck Containers Full, Truck Containers Empty, Pedestrians, Personal Vehicles, Rail Containers Empty, Train Passengers, Rail Containers Full, Trains<br />
-<code>long</code>: Longitude of the port of the crossing <code>lat</code>: Latitude of the port of the crossing <code>port_name_state</code>: The port name and state for which the crossing took place. Some ports had the same name so this variable was created to append <code>state</code> as well. <code>vehicle</code>:</p>
+<code>measure</code>: The type of vehicle or non-vehicle utilized in the border crossing. Potential entries include: Trucks, Buses, Bus Passengers, Personal Vehicle Passengers, Truck Containers Full, Truck Containers Empty, Pedestrians, Personal Vehicles, Rail Containers Empty, Train Passengers, Rail Containers Full, Trains<br />
+<code>long</code>: Longitude of the port of the crossing<br />
+<code>lat</code>: Latitude of the port of the crossing<br />
+<code>port_name_state</code>: The port name and state for which the crossing took place. Some ports had the same name so this variable was created to append <code>state</code> as well<br />
+<code>vehicle</code>: Entry is “non-vehicle” for pedestrians and passengers (on either buses, personal vehicles, or trains), and is “vehicle” for all other <code>measure</code> values</p>
 </div>
 </div>
 </div>
@@ -448,16 +478,25 @@ div.tocify {
 <h2>Exploratory Data Analysis</h2>
 <div id="crossings-monthly" class="section level4">
 <h4><em>Crossings Monthly</em></h4>
+<p><strong>Question: What are the seasonal trends in border crossings?</strong></p>
+<p>Follow this link to <a href="crossings_monthly.html">Monthly Crossing Data</a>.</p>
+<p>Graphs in this section visualize border crossings across the months of the year. One visualize produced analyzes trends in total border crossings for both the US-Canada and the US-Mexico border. From this, we were able to see that there is a seasonal variation in border crossings from the US-Canada border, with a jump is crossings during the summer months. However, the US-Mexico border had a stable volume of crossings throughout the months for the years 2000-2018.</p>
+<p>Additionally, border crossings for the top 5 states with the largest total number of border crossings (Arizona, California, Michigan, New York and Texas) were analyzed for 2018. Both the average border crossings across all ports and the total border crossings across all ports for month were evaluated. From this, we found that California had the largest average number of border crossings across all ports, however, Texas had the largest total border crossings by month. This leads us to conclude that Texas has more ports than California, thus the average crossings per port are lower.</p>
+<p>Lastly, from these plots we were able to deduce that New York and Michigan (both on the US-Canada border) had increases in both their total and average crossings by month during the summer months. This trend was not observed in Arizona, California, or Texas, thus supporting the findings that the US-Canada border has an increase in crossings during the summer compared to the stable border crossings on the US-Mexico border.</p>
 </div>
 <div id="crossings-annually" class="section level4">
 <h4><em>Crossings Annually</em></h4>
+<p>Follow this link to <a href="crossings_annually.html">Annual Crossing Data</a>.</p>
+<p><strong>Question: Has the volume of border crossings changed from 2000-2018?</strong></p>
+<p>The analysis in this section contains a table with the total number of border crossings aggregated across all ports for each year. From this, we can see that there has been a decline in border crossings since 2000. The decline was steady decline until 2012 in which a slight upwards turn took place. This upturn took place and began to rise slowly until 2018, although the values never grew larger than they were in 2008.</p>
+<p>Additionally, a graph of average number of border crossings by year for the top 5 states with the largest total number of border crossings (Arizona, California, Michigan, New York and Texas) was created. From this, we can see that for New York and Michigan, there is a clear decline in the average number of border crossings across all ports over the years, with the lowest averages being in 2018. These results contrast to California, in which 2018 saw the highest average of border crossings across all ports. This may lead us to conclude that border crossings on the US-Canada border decreased over time, but maybe the opposite is to be seen for the US-Mexico border.</p>
 </div>
 <div id="crossings-of-people" class="section level4">
 <h4><em>Crossings of People</em></h4>
 </div>
 <div id="crossings-of-vehicles" class="section level4">
 <h4><em>Crossings of Vehicles</em></h4>
-<p><strong>Question: Are there any seasonal trends in border crossings? What are the general trends for vehicle compared to non-vehicle crossings, by month and year?</strong></p>
+<p><strong>Question: What are the general trends for vehicle compared to non-vehicle crossings, by month and year?</strong></p>
 <p>Follow this link to <a href="crossings_vehicles.html">Crossings of Vehicles</a>.</p>
 <p>Our graphs visualize both monthly and annual trends of border crossings for vehicles and non-vehicles, which we defined to be any passengers or pedestrians. We decided to explore the natural-log number of crossings due to a very right-skew of the data. This allowed us to examine the differences in trends for vehicle types, and to see that buses and personal vehicles have seasonality at the US-Canada border specifically in the summer months.</p>
 <p>We also looked at the overall annual trends in border crossings by vehicles and non-vehicles and saw that they both ebb and flow similarly. This may be because the counts of passengers are correlated with the number of vehicles they correspond to, therefore the differences in the number of crossings is of less importance than the visual trend.</p>
@@ -483,7 +522,7 @@ div.tocify {
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();
@@ -507,6 +546,11 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
 <script>
 $(document).ready(function ()  {

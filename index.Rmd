@@ -15,7 +15,7 @@ Border States and Provinces, as well as to the two national economies (Eastern B
 
 <br>
 
-![](images/us_border.JPG)
+<img align="left" src="images/us_border.jpg" style="width:60%; margin-right: 20px"  > 
 
 <br><br>
 
@@ -26,7 +26,7 @@ Border States and Provinces, as well as to the two national economies (Eastern B
    Immigration has been a hotly contested issue during Trump’s presidency. Marking his words of building a “big, beautiful wall” in 2016, President Donald Trump got the green light from The Supreme Court in 2019 and $2.5 billion from the Pentagon’s budget to building up the U.S.-Mexico border. 
 </p>
 
-<br><br><br><br>
+<br><br><br><br><br><br><br><br>
 
 ## Motivation:
 

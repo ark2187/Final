@@ -405,17 +405,17 @@ div.tocify {
 
 <div id="variations-in-border-crossings-by-year" class="section level2">
 <h2><em>Variations in Border Crossings by Year</em></h2>
-<p>The table below shows us that there has been a decline in border crossings since 2000. There was a steady decline until 2011, which a slight upwards turn in 2012 that carried on through 2018.</p>
+<p>The table below shows us that there has been a decline in border crossings since 2000. There was a steady decline until 2012, where there was a slight upwards turn that carried on through 2018.</p>
 <pre class="r"><code>## Border crossings by year
 border_crossing_df %&gt;% 
   group_by(year) %&gt;% 
   summarize(total_crossings = sum(value)) %&gt;% 
-  knitr::kable()</code></pre>
+  knitr::kable(col.names = c(&quot;Year&quot;, &quot;Total Border Crossings&quot;)) </code></pre>
 <table>
 <thead>
 <tr class="header">
-<th align="right">year</th>
-<th align="right">total_crossings</th>
+<th align="right">Year</th>
+<th align="right">Total Border Crossings</th>
 </tr>
 </thead>
 <tbody>
@@ -493,12 +493,17 @@ border_crossing_df %&gt;%
 </tr>
 <tr class="odd">
 <td align="right">2018</td>
-<td align="right">379157530</td>
+<td align="right">379157157</td>
 </tr>
 </tbody>
 </table>
-<p>Below is a plot of information containing average crossing values for each month in each of the 5 states with the largest number of border crossings. Each line represents a year from 2000 to 2018.</p>
-<p>Looking at these plots, we can see the clear decline in border crossings over the years in Michigan and New York. In Arizona and Texas, there is also an apparent decline, however, the volume in 2016-2018 shows that there was an upturn in these years compared to years 2012-2016. Lastly, in California, 2018 appears to be the year with the highest volume, and no clear declines annually.</p>
+<p>Below are a series of plots containing average crossing values across all ports for each month in each of the 5 states with the largest number of border crossings. Each line represents a year from 2000 to 2018.</p>
+<p>Looking at these plots, we can see:</p>
+<ul>
+<li>There is a clear decline in average border crossings over the years across all ports in Michigan and New York.</li>
+<li>In Arizona and Texas, there is also an apparent average decline, however, the volume in 2016-2018 shows that there was an upturn in these years compared to years 2012-2016.</li>
+<li>Lastly, in California, 2018 appears to be the year with the highest average volume across ports, and no clear declines annually.</li>
+</ul>
 <pre class="r"><code>border_crossing_df %&gt;%
   filter(state %in% c(&quot;Texas&quot;, &quot;California&quot;, &quot;Arizona&quot;, &quot;New York&quot;, &quot;Michigan&quot;)) %&gt;%
   group_by(state, month_name, year) %&gt;%  
@@ -508,7 +513,6 @@ border_crossing_df %&gt;%
   geom_line() + 
   theme(legend.position = &quot;bottom&quot;) + 
   facet_wrap(~state) +
-  #scale_x_continuous(limits = c(1,12), breaks = c(1:12)) +
   labs(title = &quot;Average Number of Border Crossings by Year in New York&quot;,
        x = &quot;Month&quot;, 
        y = &quot;Number of Crossings&quot;, 
