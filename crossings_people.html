@@ -25,6 +25,17 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -396,13 +407,13 @@ div.tocify {
 <p>Methods of passenger travel</p>
 <p>Number of passengers over time</p>
 <pre class="r"><code>border_crossing_df = readRDS(file = &quot;border_crossing_df_clean.rds&quot;)</code></pre>
-<pre class="r"><code>people_yearly &lt;-
+<pre class="r"><code>people_yearly_1 &lt;-
 border_crossing_df %&gt;%
-  filter(measure %in% c(&quot;Personal Vehicle Passengers&quot;,&quot;Pedestrians&quot;,&quot;Bus Passengers&quot;, &quot;Train Passengers&quot;)) %&gt;%
+  filter(measure %in% c(&quot;Bus Passengers&quot;, &quot;Train Passengers&quot;)) %&gt;%
   group_by(border, measure, year) %&gt;%
   summarize(num = sum(value))</code></pre>
 <pre><code>## `summarise()` regrouping output by &#39;border&#39;, &#39;measure&#39; (override with `.groups` argument)</code></pre>
-<pre class="r"><code>people_yearly %&gt;%
+<pre class="r"><code>people_yearly_1 %&gt;%
     mutate(measure = as.factor(measure), border = as.factor(border)) %&gt;%
   ungroup() %&gt;%
   ggplot(aes(x = year, y = num , group = measure , color = measure)) +
@@ -415,6 +426,25 @@ border_crossing_df %&gt;%
        y = &quot;Number of Crossings&quot;, 
        color = &quot;measure&quot;)</code></pre>
 <p><img src="crossings_people_files/figure-html/unnamed-chunk-3-1.png" width="90%" /></p>
+<pre class="r"><code>people_yearly_2 &lt;-
+border_crossing_df %&gt;%
+  filter(measure %in% c(&quot;Personal Vehicle Passengers&quot;,&quot;Pedestrians&quot;)) %&gt;%
+  group_by(border, measure, year) %&gt;%
+  summarize(num = sum(value))</code></pre>
+<pre><code>## `summarise()` regrouping output by &#39;border&#39;, &#39;measure&#39; (override with `.groups` argument)</code></pre>
+<pre class="r"><code>people_yearly_2 %&gt;%
+    mutate(measure = as.factor(measure), border = as.factor(border)) %&gt;%
+  ungroup() %&gt;%
+  ggplot(aes(x = year, y = num , group = measure , color = measure)) +
+  geom_point() +
+  geom_line() +
+  facet_grid(~border) +
+  theme(legend.position = &quot;bottom&quot;) + 
+  labs(title = &quot;Yearly Trends of People Crossings from 2000 to 2018&quot;,
+       x = &quot;year&quot;, 
+       y = &quot;Number of Crossings&quot;, 
+       color = &quot;measure&quot;)</code></pre>
+<p><img src="crossings_people_files/figure-html/unnamed-chunk-4-1.png" width="90%" /></p>
 </div>
 
 
@@ -428,7 +458,7 @@ border_crossing_df %&gt;%
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();

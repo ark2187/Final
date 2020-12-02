@@ -126,6 +126,17 @@ Additionally, a graph of average number of border crossings by year for the top 
 
 #### _Crossings of People_
 
+**Question: What are the trends in border crossings of people through variosu methods?**
+
+Follow this link to [People Crossing Data](crossings_people.html).
+
+Graphs in this section visualize border crossings over the years at both the US-Canada and US-Mexico border. This visualization was created using only variables that identified they were specifically referencing a person, so that the unit was per person crossing. We can sere were also sharp decines in 2008 at both borders. Train passengers stayed consitent across the two decades at both borders. At the US-Canada border, we saw a fairly consistent number of personal vehicles, with a slight decline over the two decades. Howevever, at the US-Mexico border, we saw a very sharp decline, turning around 2011-2012, with a slight increase from then until 2018.
+
+Pedestrians are nearly non-existant at Canada, which we can assume may be due to the geographic landscape and the temperatures. At the Us-Mexico border, we saw a consistent number of pedestrians that was nearly equivalent to those who use personal vehciles at the US-Canada border, suggesting that there is some equivalency between the two proportions of people and their respective methods of travel.
+
+
+
+
 #### _Crossings of Vehicles_
 
 **Question: What are the general trends for vehicle compared to non-vehicle crossings, by month and year?**
