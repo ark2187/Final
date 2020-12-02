@@ -35,6 +35,8 @@ Primary data source from Kaggle: [Border Crossing Entry Data](https://www.kaggle
 
 
 ```{r clean_data, warning=FALSE, message=FALSE}
+library(tidyverse)
+
 month_df <- tibble(month = 1:12, month_name = month.name) %>%
          mutate(month_name = as.factor(month_name),
          month_name = ordered(month_name, levels =  c("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"))) %>%
@@ -126,7 +128,7 @@ Additionally, a graph of average number of border crossings by year for the top 
 
 #### _Crossings of People_
 
-**Question: What are the trends in border crossings of people through variosu methods?**
+**Question: What are the trends in border crossings of people through various methods?**
 
 Follow this link to [People Crossing Data](crossings_people.html).
 
@@ -147,10 +149,21 @@ Our graphs visualize both monthly and annual trends of border crossings for vehi
 
 We also looked at the overall annual trends in border crossings by vehicles and non-vehicles and saw that they both ebb and flow similarly. This may be because the counts of passengers are correlated with the number of vehicles they correspond to, therefore the differences in the number of crossings is of less importance than the visual trend.
 
-Finally, we further stratified our exploration of annual trends by border. We find that visually, there are consistently many more crossings at the US-Mexico border than at the US-Canada border. There is also a bigger gap between the vehicle and non-vehicle lines for the US-Mexico border, likely showing that there are more pedestrians and people per vehicle that for the US-Canada border. The lowest number of crossings at the US-Canada border is in 2009, whereas it is in 2011 at the US-Mexico border.
+We further stratified our exploration of annual trends by border. We find that visually, there are consistently many more crossings at the US-Mexico border than at the US-Canada border. There is also a bigger gap between the vehicle and non-vehicle lines for the US-Mexico border, likely showing that there are more pedestrians and people per vehicle that for the US-Canada border. The lowest number of crossings at the US-Canada border is in 2009, whereas it is in 2011 at the US-Mexico border.
 
+Finally, we explored the number and type of crossing in Texas and California because a previous chart showed California with a higher average crossing than Texas. Texas has higher total crossings. This visualization is also designed to explore if the general types of vehicles are the same or if they have different patterns overtime. We see stepwise changes in rail crossings and generally the same distributions of crossing types over time. 
 
 ## Description of Approaches and Alternate Approaches
+
+This project was inspired by recent US immigration policy and the national discourse about illegal immigration and enforcement. However, the available data only captures legal border crossings. In addition, the dataset does not include information on why a crossing is made, e.g. for immigration, vacation, or commerce. Nor is the nationality of the travel known. 
+
+We adjusted our approach accordingly by coding a "vehicle" and "non-vehicle" variable to understand the movement of people and goods as separately as possible.
+
+We also knew that we wanted to visualize the crossings on a map. However, the U.S borders are long, especially when including Alaska, making it difficult to see all crossing info at once.
+
+Using a shiny leaflet map solved this issue by allowing the user to select the US-Canada border or the US-Mexico border. The user can also select the type of crossing that is of interest to them. 
+
+Users can also see the a boxplot of the monthly log number of crossings for each year and border to see state variations. Finally, a line graph of monthly crossing by vehicle type is included to show seasonality and vehicle trends. 
 
 ## Discussion
 

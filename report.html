@@ -430,7 +430,9 @@ div.tocify {
 </div>
 <div id="cleaning" class="section level3">
 <h3><em>Cleaning</em></h3>
-<pre class="r"><code>month_df &lt;- tibble(month = 1:12, month_name = month.name) %&gt;%
+<pre class="r"><code>library(tidyverse)
+
+month_df &lt;- tibble(month = 1:12, month_name = month.name) %&gt;%
          mutate(month_name = as.factor(month_name),
          month_name = ordered(month_name, levels =  c(&quot;January&quot;, &quot;February&quot;, &quot;March&quot;, &quot;April&quot;, &quot;May&quot;, &quot;June&quot;, &quot;July&quot;, &quot;August&quot;, &quot;September&quot;, &quot;October&quot;, &quot;November&quot;, &quot;December&quot;))) %&gt;%
   arrange(month_name)
@@ -493,6 +495,10 @@ border_crossing_df = read_csv(file = &quot;./Border_Crossing_Entry_Data.csv&quot
 </div>
 <div id="crossings-of-people" class="section level4">
 <h4><em>Crossings of People</em></h4>
+<p><strong>Question: What are the trends in border crossings of people through various methods?</strong></p>
+<p>Follow this link to <a href="crossings_people.html">People Crossing Data</a>.</p>
+<p>Graphs in this section visualize border crossings over the years at both the US-Canada and US-Mexico border. This visualization was created using only variables that identified they were specifically referencing a person, so that the unit was per person crossing. We can sere were also sharp decines in 2008 at both borders. Train passengers stayed consitent across the two decades at both borders. At the US-Canada border, we saw a fairly consistent number of personal vehicles, with a slight decline over the two decades. Howevever, at the US-Mexico border, we saw a very sharp decline, turning around 2011-2012, with a slight increase from then until 2018.</p>
+<p>Pedestrians are nearly non-existant at Canada, which we can assume may be due to the geographic landscape and the temperatures. At the Us-Mexico border, we saw a consistent number of pedestrians that was nearly equivalent to those who use personal vehciles at the US-Canada border, suggesting that there is some equivalency between the two proportions of people and their respective methods of travel.</p>
 </div>
 <div id="crossings-of-vehicles" class="section level4">
 <h4><em>Crossings of Vehicles</em></h4>
@@ -500,11 +506,17 @@ border_crossing_df = read_csv(file = &quot;./Border_Crossing_Entry_Data.csv&quot
 <p>Follow this link to <a href="crossings_vehicles.html">Crossings of Vehicles</a>.</p>
 <p>Our graphs visualize both monthly and annual trends of border crossings for vehicles and non-vehicles, which we defined to be any passengers or pedestrians. We decided to explore the natural-log number of crossings due to a very right-skew of the data. This allowed us to examine the differences in trends for vehicle types, and to see that buses and personal vehicles have seasonality at the US-Canada border specifically in the summer months.</p>
 <p>We also looked at the overall annual trends in border crossings by vehicles and non-vehicles and saw that they both ebb and flow similarly. This may be because the counts of passengers are correlated with the number of vehicles they correspond to, therefore the differences in the number of crossings is of less importance than the visual trend.</p>
-<p>Finally, we further stratified our exploration of annual trends by border. We find that visually, there are consistently many more crossings at the US-Mexico border than at the US-Canada border. There is also a bigger gap between the vehicle and non-vehicle lines for the US-Mexico border, likely showing that there are more pedestrians and people per vehicle that for the US-Canada border. The lowest number of crossings at the US-Canada border is in 2009, whereas it is in 2011 at the US-Mexico border.</p>
+<p>We further stratified our exploration of annual trends by border. We find that visually, there are consistently many more crossings at the US-Mexico border than at the US-Canada border. There is also a bigger gap between the vehicle and non-vehicle lines for the US-Mexico border, likely showing that there are more pedestrians and people per vehicle that for the US-Canada border. The lowest number of crossings at the US-Canada border is in 2009, whereas it is in 2011 at the US-Mexico border.</p>
+<p>Finally, we explored the number and type of crossing in Texas and California because a previous chart showed California with a higher average crossing than Texas. Texas has higher total crossings. This visualization is also designed to explore if the general types of vehicles are the same or if they have different patterns overtime. We see stepwise changes in rail crossings and generally the same distributions of crossing types over time.</p>
 </div>
 </div>
 <div id="description-of-approaches-and-alternate-approaches" class="section level2">
 <h2>Description of Approaches and Alternate Approaches</h2>
+<p>This project was inspired by recent US immigration policy and the national discourse about illegal immigration and enforcement. However, the available data only captures legal border crossings. In addition, the dataset does not include information on why a crossing is made, e.g. for immigration, vacation, or commerce. Nor is the nationality of the travel known.</p>
+<p>We adjusted our approach accordingly by coding a “vehicle” and “non-vehicle” variable to understand the movement of people and goods as separately as possible.</p>
+<p>We also knew that we wanted to visualize the crossings on a map. However, the U.S borders are long, especially when including Alaska, making it difficult to see all crossing info at once.</p>
+<p>Using a shiny leaflet map solved this issue by allowing the user to select the US-Canada border or the US-Mexico border. The user can also select the type of crossing that is of interest to them.</p>
+<p>Users can also see the a boxplot of the monthly log number of crossings for each year and border to see state variations. Finally, a line graph of monthly crossing by vehicle type is included to show seasonality and vehicle trends.</p>
 </div>
 <div id="discussion" class="section level2">
 <h2>Discussion</h2>

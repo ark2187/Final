@@ -127,16 +127,17 @@ renderLeaflet(
 Column {data-width=450}
 -----------------------------------------------------------------------
 
-### Boxplot for Selected Crossings for Corresponding Border States
+### Boxplot for Monthly Crossings for Corresponding Border States
 
 ```{r}
 renderPlotly({
     border_crossing_df %>%
-    group_by(state, border, year, measure) %>%
+    group_by(state, border, year, month) %>%
     summarize(num = sum(value)) %>%
+    summarize(num, med = median(num)) %>%
     filter(border == input[["border_choice"]],
            year == input[["year_choice"]]) %>%
-    plot_ly(x = ~state, y = ~log(num), color = ~state, 
+    plot_ly(x = ~reorder(state, med), y = ~log(num), color = ~state, 
             type = "box", colors = "viridis", alpha = 0.5) %>%
     layout(xaxis = list(title = 'State'),
            yaxis = list(title = 'Ln Number of Crossings',
