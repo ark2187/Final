@@ -119,10 +119,10 @@ Many rows had a `value` of 0 , ie. there were no border crossings for that speci
 
 ## **Exploratory Analysis** 
 
-In the Exploratory Analyses tab, you can observe <br>
+In the Exploratory Analyses tab, you can observe
 
-* change in the number of border crossing across years <br>
-* seasonal trend <br>
+* change in the number of border crossing across years
+* seasonal trend
 * difference between each vehicle type. 
 
 #### _Crossings Monthly_
