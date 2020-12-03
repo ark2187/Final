@@ -405,13 +405,20 @@ div.tocify {
 
 <div id="motivation" class="section level2">
 <h2><strong>Motivation</strong></h2>
-<p>Immigration has been a hotly contested issue during Trump’s presidency. Marking his words of building a “big, beautiful wall” in 2016, President Donald Trump got the green light from The Supreme Court in 2019 and $2.5 billion from the Pentagon’s budget to building up the U.S.-Mexico border.</p>
-<p>Ironically, despite the promise of his campaign to stop illegal immigration and build a strong bolder, the Trump administration faced a great challenge since the number of apprehensions significantly soar. For example, in August 2018, one-month total apprehensions was the highest on record and an 80 percent increase from July 2018. This trend is quite contrasting to the border crossing situation under the Obama administration. From 2008 to 2016, the yearly apprehensions on the Southwest border declined by 35 percent.</p>
-<p>Although the data we found on border crossings on Kaggle are recorded, legal, and do not run into 2020, we were interested in looking at border crossing trends because of this issue. Understanding the change in legal border crossing is crucial when considering the United States and Mexico’s mutually dependent relationship in many aspects: including economy, separated immigrants’ family issues, etc. Indeed, Mexico has remained the United States’ second-largest export market since 1995, with exports totaling $242 billion in 2017. This analysis will help us understand and show how the border crossings play into life (e.g., movement of goods, commuting, holiday travel).</p>
+<p>The cooperation, interconnection of the U.S., Mexico, and Canada is fundamental to our shared success considering our intertwined economics, trade, and culture. Indeed, The U.S. and Canada enjoy the world’s largest and most comprehensive trading relationship, which supports millions of jobs in each country, sharing a $1.4 trillion bilateral trade and investment relationship. Also, Mexico has remained the United States’ second-largest export market since 1995, with exports totaling $242 billion in 2017.</p>
+<p>However, unfortunately, the close relationships across North America and interaction between countries, especially border crossings, may fluctuate due to political factors. For example, immigration has been a hotly contested issue during Trump’s presidency. Marking his words of building a “big, beautiful wall” in 2016, President Donald Trump got the green light from The Supreme Court in 2019 and $2.5 billion from the Pentagon’s budget to building up the U.S.-Mexico border. In addition, strong trade between the U.S. and Canada faced difficulty when President Trump announced to impose tariffs on aluminum imports, which are mainly supplied by Canada.</p>
+<p>Although the data we found on border crossings on Kaggle are recorded, legal, and do not run into 2020, we were interested in looking at border crossing trends because of some socio/political factors. As an example, we are hypothesizing that the illegal immigration policy under the Trump administration affects the ‘legal’ border crossing as unfavorable tension between the U.S. and Mexico may shrink non-imminent border crossing activity.</p>
+<p>Understanding the change in legal border crossing is crucial considering the mutually dependent relationship across North America, and we believe this analysis will provide useful information to help understand how the change in border crossings play a role in our life (e.g., movement of goods, commuting, holiday travel).</p>
 </div>
 <div id="related-work" class="section level2">
 <h2><strong>Related Work</strong></h2>
-<p>The following resources are a sample of what inspired this project<br> * Trump wall: How much has he actually built?, BBC News, October 2020: <a href="https://www.bbc.com/news/world-us-canada-46824649">link</a> <br> * A Decade of Decline in Person Crossings From Mexico and Canada Into the United States, Jenny Guarino, Bureau of Transportation Statistics, May 2017: <a href="https://www.bts.gov/sites/bts.dot.gov/files/legacy/publications/special_reports_and_issue_briefs/special_report/2011_02_27/pdf/entire.pdf">link</a></p>
+<p>The following resources are a sample of what inspired this project<br></p>
+<ul>
+<li>Trump wall: How much has he actually built?, BBC News, October 2020: <a href="https://www.bbc.com/news/world-us-canada-46824649">link</a> <br></li>
+<li>A Decade of Decline in Person Crossings From Mexico and Canada Into the United States, Jenny Guarino, Bureau of Transportation Statistics, May 2017: <a href="https://www.bts.gov/sites/bts.dot.gov/files/legacy/publications/special_reports_and_issue_briefs/special_report/2011_02_27/pdf/entire.pdf">link</a></li>
+<li>U.S.-Canada-Mexico Fact Sheet on Trade and Migration, The Migration Policy Institute, 2003: <a href="https://www.migrationpolicy.org/pubs/three_us_mexico_canada_trade.pdf">link</a></li>
+<li>Here’s how much traffic crosses the U.S.-Mexico border, The Orange County Register,2019: <a href="https://www.ocregister.com/2019/04/05/heres-how-much-traffic-crosses-the-u-s-mexico-border/">link</a></li>
+</ul>
 </div>
 <div id="initial-questions" class="section level2">
 <h2><strong>Initial Questions</strong></h2>
@@ -429,7 +436,8 @@ div.tocify {
 <h2><strong>Data</strong></h2>
 <div id="source" class="section level4">
 <h4><strong>Source</strong></h4>
-<p>Primary data source from Kaggle: <a href="https://www.kaggle.com/akhilv11/border-crossing-entry-data">Border Crossing Entry Data</a></p>
+<p>Primary data source: <a href="https://www.kaggle.com/akhilv11/border-crossing-entry-data">Border Crossing Entry Data</a> <br></p>
+<p>The Bureau of Transportation Statistics (BTS) Border Crossing Data is summary statistics for border-crossing returning the the U.S. at the U.S.-Canada and the U.S.-Mexico border at the port level. Data are collected at ports of entry by U.S. and include the number of veheciles, containers, passengers, or pedestriants.</p>
 </div>
 <div id="cleaning" class="section level4">
 <h4><strong>Cleaning</strong></h4>
@@ -457,8 +465,6 @@ border_crossing_df = read_csv(file = &quot;./Border_Crossing_Entry_Data.csv&quot
                              measure == &quot;Pedestrians&quot;,
                            &quot;Non-Vehicles&quot;, &quot;Vehicles&quot;)) %&gt;% 
   filter(year &gt;= 2000, year &lt; 2019, value != 0, state != &quot;Ohio&quot;)</code></pre>
-<p>Primary data source: <a href="https://www.kaggle.com/akhilv11/border-crossing-entry-data">Border Crossing Entry Data</a> <br></p>
-<p>The Bureau of Transportation Statistics (BTS) Border Crossing Data is summary statistics for border-crossing returning the the U.S. at the U.S.-Canada and the U.S.-Mexico border at the port level. Data are collected at ports of entry by U.S. and include the number of veheciles, containers, passengers, or pedestriants.</p>
 <p>After choosing the database, years were limited from 2000-2018, as the information for border crossings in 2019 was only available until March. Additionally, years prior to 2000 were removed in order to scale the database to a manageable size. Values for Ohio were also removed as observations for this state only began in 2018.</p>
 <p>Information regarding day of the month was removed because the count of all border crossings was reported on the first day of every month of each year. Additionally,all times of the reports were 12am, so time information was removed as well.</p>
 <p>Some ports in different states had the same name (ex: Eastport), thus, a variable <code>port_name_state</code> was created in order to make sure each port name was unique. A variable called <code>vehicle</code> was also created in order to condense down the wide variety of <code>measure</code> entries that were possible.</p>
@@ -483,7 +489,12 @@ border_crossing_df = read_csv(file = &quot;./Border_Crossing_Entry_Data.csv&quot
 </div>
 <div id="exploratory-analysis" class="section level2">
 <h2><strong>Exploratory Analysis</strong></h2>
-<p>In the Exploratory Analyses tab, you can observe <br> * change in the number of border crossing across years <br> * seasonal trend <br> * difference between each vehicle type.</p>
+<p>In the Exploratory Analyses tab, you can observe <br></p>
+<ul>
+<li>change in the number of border crossing across years <br></li>
+<li>seasonal trend <br></li>
+<li>difference between each vehicle type.</li>
+</ul>
 <div id="crossings-monthly" class="section level4">
 <h4><em>Crossings Monthly</em></h4>
 <p><strong>Question: What are the seasonal trends in border crossings?</strong></p>
