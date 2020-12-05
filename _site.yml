@@ -2,6 +2,9 @@ name: "final proj"
 output_dir: "."
 navbar:
   title: "About"
+  right:
+    - icon: fa-youtube fa-lg
+      href: https://youtu.be/fr1vobtb0sY
   left:
     - text: "Report"
       href: report.html
